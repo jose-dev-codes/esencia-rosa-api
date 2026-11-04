@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.*
+!.env.example
+coverage/
+.DS_Store
+Thumbs.db
+.expo/
+dist/
+web-build/
+client/config/api.ts
+client/.claude/
+client/AGENTS.md
+client/.vscode/
