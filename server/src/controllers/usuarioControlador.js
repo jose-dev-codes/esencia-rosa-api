@@ -1,34 +1,8 @@
 import * as usuarioServicio from "../services/usuarioServicio.js";
 
-// Comprueba que los campos obligatorios estén presentes y no vacíos.
-const validarCamposObligatorios = (datos, campos) => {
-    return campos.every((campo) => {
-        const valor = datos[campo];
-
-        return valor !== undefined &&
-            valor !== null &&
-            String(valor).trim() !== "";
-    });
-};
-
 // Registra un nuevo usuario.
 export const registrarUsuario = async (req, res) => {
     try {
-        const camposObligatorios = [
-            "nombres",
-            "apellidos",
-            "correo",
-            "contrasena",
-            "numero_telefono",
-            "fecha_nacimiento"
-        ];
-
-        if (!validarCamposObligatorios(req.body, camposObligatorios)) {
-            return res.status(400).json({
-                error: "Todos los campos son obligatorios."
-            });
-        }
-
         const resultado = await usuarioServicio.registrarUsuario(req.body);
 
         if (!resultado.exito) {
@@ -51,20 +25,6 @@ export const registrarUsuario = async (req, res) => {
 // Actualiza los datos de un usuario.
 export const actualizarUsuario = async (req, res) => {
     try {
-        const camposObligatorios = [
-            "nombres",
-            "apellidos",
-            "correo",
-            "numero_telefono",
-            "fecha_nacimiento"
-        ];
-
-        if (!validarCamposObligatorios(req.body, camposObligatorios)) {
-            return res.status(400).json({
-                error: "Todos los campos son obligatorios."
-            });
-        }
-
         const resultado = await usuarioServicio.actualizarUsuario(
             Number(req.params.id), req.body
         );
@@ -176,12 +136,6 @@ export const eliminarUsuario = async (req, res) => {
 // Actualiza la contraseña de un usuario.
 export const actualizarContrasena = async (req, res) => {
     try {
-        if (!validarCamposObligatorios(req.body, ["contrasena"])) {
-            return res.status(400).json({
-                error: "La contraseña es obligatoria."
-            });
-        }
-
         const resultado = await usuarioServicio.actualizarContrasena(
             Number(req.params.id), req.body.contrasena
         );

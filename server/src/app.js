@@ -7,6 +7,9 @@ import cors from "cors";
 // Importa las rutas de usuarios.
 import usuarioRutas from "./routes/usuarioRutas.js";
 
+// Importa las rutas de autenticación.
+import authRutas from "./routes/authRutas.js";
+
 // Crea la aplicación de Express.
 const app = express();
 
@@ -18,6 +21,9 @@ app.use(express.json());
 
 // Registra las rutas del módulo de usuarios.
 app.use("/api/usuarios", usuarioRutas);
+
+// Registra las rutas del módulo de autenticación.
+app.use("/api/auth", authRutas);
 
 // Define una ruta básica para comprobar que la API funciona.
 app.get("/", (req, res) => {

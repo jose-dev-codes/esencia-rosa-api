@@ -6,7 +6,7 @@ import {
   View
 } from 'react-native';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { IconCircleCheck } from '@tabler/icons-react-native';
 import { modalExitoStyles } from '@/styles/modal-exito-styles';
 
 type ModalExitoProps = {
@@ -41,10 +41,10 @@ const ModalExito = ({
       <View style={modalExitoStyles.fondoModal}>
         <View style={modalExitoStyles.modal}>
 
-          <MaterialCommunityIcons
-            name='check-circle-outline'
+          <IconCircleCheck
             size={110}
             color='#E42BB8'
+            strokeWidth={1.5}
             style={{ marginBottom: 5 }}
           />
 

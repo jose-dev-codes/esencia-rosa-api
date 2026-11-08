@@ -4,9 +4,12 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@tabler/icons-react-native": "^3.50.0",
     "expo": "~57.0.31",
     "expo-constants": "~57.0.22",
     "expo-font": "~57.0.4",
+    "expo-linear-gradient": "^58.0.3",
     "expo-linking": "~57.0.13",
     "expo-router": "~57.0.29",
     "expo-splash-screen": "~57.0.10",

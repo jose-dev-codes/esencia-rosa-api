@@ -12,7 +12,8 @@ export const modalExitoStyles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     backgroundColor: '#FFFFFF',
-    alignItems: 'center'
+    alignItems: 'center',
+    boxShadow: '0 0px 20px rgba(0, 0, 0, 0.30)'
   },
   mensajeModal: {
     fontSize: 17,

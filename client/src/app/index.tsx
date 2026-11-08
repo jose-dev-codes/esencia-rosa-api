@@ -1,4 +1,4 @@
-import PantallaEntrada from '../screens/pantalla-entrada';
+import PantallaEntrada from '@/screens/pantalla-entrada';
 
 const Entrada = () => {
   return <PantallaEntrada />;

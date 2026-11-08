@@ -1,29 +1,54 @@
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { useState, useCallback } from 'react';
+import { useFocusEffect, router } from 'expo-router';
+import { obtenerPerfil } from '@/services/usuario-servicio';
+import { cerrarSesion } from '@/services/sesion-servicio';
+import { formatearFechaLarga } from '@/utils/formulario-utilidades';
 import Encabezado from '@/components/encabezado';
 import Boton from '@/components/boton';
 import BarraNavegacion from '@/components/barra-navegacion';
+import PantallaCarga from '@/components/pantalla-carga';
 
 import { perfilStyles } from '@/styles/perfil-styles';
 
 const PantallaPerfil = () => {
-  // Datos provisionales mientras conectamos el perfil con el backend.
-  const usuario = {
-    nombres: 'Nombre del usuario',
-    apellidos: 'Apellidos del usuario',
-    correo: 'correo@ejemplo.com',
-    telefono: '300 000 000',
-    fechaNacimiento: 'AAAA-MM-DD',
+  const [usuario, setUsuario] = useState<any>(null);
+  const [cargando, setCargando] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      const cargarPerfil = async () => {
+        setCargando(true);
+
+        const resultado = await obtenerPerfil();
+
+        if (resultado) setUsuario(resultado.datos);
+
+        setCargando(false);
+      };
+
+      cargarPerfil();
+    }, [])
+  );
+
+  const iniciales = usuario
+    ? `${usuario.nombres?.charAt(0) ?? ''}${usuario.apellidos?.charAt(0) ?? ''}`
+      .toUpperCase()
+    : '';
+
+  const manejarCerrarSesion = async () => {
+    await cerrarSesion();
+    router.replace('/iniciar-sesion');
   };
 
-  const iniciales = `${usuario.nombres.charAt(0)}${usuario.apellidos.charAt(0)}`;
+  if (cargando) return <PantallaCarga />;
 
   return (
     <SafeAreaView style={perfilStyles.contenedor}>
       <View style={perfilStyles.encabezado}>
-        <Encabezado titulo='Perfil' />
+        <Encabezado titulo='Mi perfil' />
       </View>
 
       <View style={perfilStyles.contenido}>
@@ -35,19 +60,15 @@ const PantallaPerfil = () => {
           </View>
 
           <Text style={perfilStyles.nombre}>
-            {usuario.nombres} {usuario.apellidos}
+            {usuario?.nombres} {usuario?.apellidos}
           </Text>
 
           <Text style={perfilStyles.correo}>
-            {usuario.correo}
+            {usuario?.correo}
           </Text>
         </View>
 
         <View style={perfilStyles.tarjetaInformacion}>
-          <Text style={perfilStyles.tituloSeccion}>
-            Información personal
-          </Text>
-
           <View style={perfilStyles.filaInformacion}>
             <MaterialCommunityIcons
               name='phone-outline'
@@ -57,9 +78,7 @@ const PantallaPerfil = () => {
 
             <View style={perfilStyles.detalleInformacion}>
               <Text style={perfilStyles.etiqueta}>Teléfono</Text>
-              <Text style={perfilStyles.dato}>
-                {usuario.telefono}
-              </Text>
+              <Text style={perfilStyles.dato}>{usuario?.numero_telefono}</Text>
             </View>
           </View>
 
@@ -71,20 +90,21 @@ const PantallaPerfil = () => {
             />
 
             <View style={perfilStyles.detalleInformacion}>
-              <Text style={perfilStyles.etiqueta}>
-                Fecha de nacimiento
-              </Text>
+              <Text style={perfilStyles.etiqueta}>Fecha de nacimiento</Text>
               <Text style={perfilStyles.dato}>
-                {usuario.fechaNacimiento}
+                {usuario?.fecha_nacimiento
+                  ? formatearFechaLarga(usuario.fecha_nacimiento, true)
+                  : ''}
               </Text>
             </View>
           </View>
         </View>
 
+        <Text style={perfilStyles.tituloSeccion}>Editar información</Text>
         <View style={perfilStyles.opciones}>
           <TouchableOpacity
             style={perfilStyles.filaOpcion}
-            onPress={() => {}}
+            onPress={() => router.push('/actualizar-usuario')}
           >
             <MaterialCommunityIcons
               name='account-edit-outline'
@@ -105,7 +125,7 @@ const PantallaPerfil = () => {
 
           <TouchableOpacity
             style={perfilStyles.filaOpcion}
-            onPress={() => {}}
+            onPress={() => router.push('/cambiar-contrasena')}
           >
             <MaterialCommunityIcons
               name='lock-reset'
@@ -127,7 +147,8 @@ const PantallaPerfil = () => {
 
         <Boton
           texto='Cerrar sesión'
-          onPress={() => {}}
+          onPress={manejarCerrarSesion}
+          variante='secundario'
         />
       </View>
 

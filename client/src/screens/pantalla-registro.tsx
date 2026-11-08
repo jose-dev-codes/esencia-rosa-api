@@ -1,16 +1,21 @@
-
 import {
   ScrollView,
   View,
   KeyboardAvoidingView
 } from 'react-native';
-import {
-  actualizarCampo,
-  limpiarCampos
-} from '@/utils/formulario-utilidades';
 
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+
+import {
+  actualizarCampo,
+  limpiarCampos,
+  limpiarError,
+  limpiarErroresCampo
+} from '@/utils/formulario-utilidades';
+
+import { validarRegistro, ErroresRegistro } from '@/validators/usuario-validador';
 
 import Boton from '@/components/boton';
 import CampoFormulario from '@/components/campo-formulario';
@@ -30,6 +35,7 @@ const PantallaRegistro = () => {
   const [alturaEncabezado, setAlturaEncabezado] = useState(0);
   const [mostrarExito, setMostrarExito] = useState(false);
   const [error, setError] = useState('');
+  const [errores, setErrores] = useState<ErroresRegistro>({});
 
   const limpiarFormulario = () => {
     setNombresUsuario('');
@@ -39,10 +45,13 @@ const PantallaRegistro = () => {
     setNumeroTelefonoUsuario('');
     setFechaNacimientoUsuario('');
     setError('');
+    setErrores({});
   };
 
-  // Registra un nuevo usuario.
   const guardarInformacion = async () => {
+    limpiarError(setError);
+    setErrores({});
+
     const datosLimpios = limpiarCampos({
       nombresUsuario,
       apellidosUsuario,
@@ -51,6 +60,20 @@ const PantallaRegistro = () => {
       numeroTelefonoUsuario,
       fechaNacimientoUsuario
     });
+
+    const erroresValidacion = validarRegistro(
+      datosLimpios.nombresUsuario,
+      datosLimpios.apellidosUsuario,
+      datosLimpios.correoUsuario,
+      datosLimpios.contrasenaUsuario,
+      datosLimpios.numeroTelefonoUsuario,
+      datosLimpios.fechaNacimientoUsuario
+    );
+
+    if (Object.keys(erroresValidacion).length > 0) {
+      setErrores(erroresValidacion);
+      return;
+    }
 
     try {
       const resultado = await registrarUsuario(
@@ -63,16 +86,12 @@ const PantallaRegistro = () => {
       );
 
       if (!resultado.respuesta.ok) {
-        console.log('Estado HTTP:', resultado.respuesta.status);
-        console.log('Respuesta del servidor:', resultado.datos);
-
-        setError(
-          resultado.datos.error || 'No fue posible registrar el usuario.'
-        );
+        setError(resultado.datos.error);
         return;
       }
 
       limpiarFormulario();
+
       setMostrarExito(true);
 
     } catch (error) {
@@ -85,15 +104,15 @@ const PantallaRegistro = () => {
     <SafeAreaView style={registroStyles.areaSegura}>
       <KeyboardAvoidingView
         style={registroStyles.vistaTeclado}
-        behavior='padding'
+        behavior="padding"
       >
         <View
           style={registroStyles.encabezado}
-          onLayout={(evento) =>
-            setAlturaEncabezado(evento.nativeEvent.layout.height)
+          onLayout={(evento =>
+            setAlturaEncabezado(evento.nativeEvent.layout.height))
           }
         >
-          <Encabezado titulo='Registro'/>
+          <Encabezado titulo='Registro' />
         </View>
 
         <ScrollView
@@ -102,16 +121,20 @@ const PantallaRegistro = () => {
             marginTop: 5
           }}
           contentContainerStyle={registroStyles.contenedor}
-          keyboardShouldPersistTaps='handled'
+          keyboardShouldPersistTaps="handled"
         >
+
           <CampoFormulario
             label='Nombres'
             placeholder='Escribe tus nombres'
             value={nombresUsuario}
             icono='account-outline'
             autoCapitalize='words'
+            error={errores.nombres}
             onChangeText={(texto) =>
-              actualizarCampo(texto, setNombresUsuario, setError)
+              actualizarCampo(texto, setNombresUsuario, () =>
+                limpiarErroresCampo(setError, setErrores, 'nombres')
+              )
             }
           />
 
@@ -121,8 +144,11 @@ const PantallaRegistro = () => {
             value={apellidosUsuario}
             icono='account-multiple-outline'
             autoCapitalize='words'
+            error={errores.apellidos}
             onChangeText={(texto) =>
-              actualizarCampo(texto, setApellidosUsuario, setError)
+              actualizarCampo(texto, setApellidosUsuario, () =>
+                limpiarErroresCampo(setError, setErrores, 'apellidos')
+              )
             }
           />
 
@@ -133,8 +159,11 @@ const PantallaRegistro = () => {
             icono='email-outline'
             keyboardType='email-address'
             autoCapitalize='none'
+            error={errores.correo}
             onChangeText={(texto) =>
-              actualizarCampo(texto, setCorreoUsuario, setError)
+              actualizarCampo(texto, setCorreoUsuario, () =>
+                limpiarErroresCampo(setError, setErrores, 'correo')
+              )
             }
           />
 
@@ -145,8 +174,11 @@ const PantallaRegistro = () => {
             icono='lock-outline'
             secureTextEntry
             autoCapitalize='none'
+            error={errores.contrasena}
             onChangeText={(texto) =>
-              actualizarCampo(texto, setContrasenaUsuario, setError)
+              actualizarCampo(texto, setContrasenaUsuario, () =>
+                limpiarErroresCampo(setError, setErrores, 'contrasena')
+              )
             }
           />
 
@@ -156,8 +188,11 @@ const PantallaRegistro = () => {
             value={numeroTelefonoUsuario}
             icono='phone-outline'
             keyboardType='phone-pad'
+            error={errores.numeroTelefono}
             onChangeText={(texto) =>
-              actualizarCampo(texto, setNumeroTelefonoUsuario, setError)
+              actualizarCampo(texto, setNumeroTelefonoUsuario, () =>
+                limpiarErroresCampo(setError, setErrores, 'numeroTelefono')
+              )
             }
           />
 
@@ -166,8 +201,11 @@ const PantallaRegistro = () => {
             placeholder='AAAA-MM-DD'
             value={fechaNacimientoUsuario}
             icono='calendar-outline'
+            error={errores.fechaNacimiento}
             onChangeText={(texto) =>
-              actualizarCampo(texto, setFechaNacimientoUsuario, setError)
+              actualizarCampo(texto, setFechaNacimientoUsuario, () =>
+                limpiarErroresCampo(setError, setErrores, 'fechaNacimiento')
+              )
             }
           />
 
@@ -185,7 +223,7 @@ const PantallaRegistro = () => {
         <ModalExito
           visible={mostrarExito}
           mensaje='Usuario registrado correctamente.'
-          onClose={() => setMostrarExito(false)}
+          onClose={() => router.replace('/iniciar-sesion')}
         />
 
       </KeyboardAvoidingView>

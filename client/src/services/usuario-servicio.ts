@@ -1,4 +1,6 @@
 import API_URL from "../../config/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { verificarSesion } from './sesion-servicio';
 
 // Registra un nuevo usuario.
 export const registrarUsuario = async (
@@ -53,10 +55,15 @@ export const actualizarUsuario = async (
   numeroTelefono: string,
   fechaNacimiento: string
 ) => {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) return null;
+
   const respuesta = await fetch(`${API_URL}/usuarios/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': token
     },
     body: JSON.stringify({
       nombres,
@@ -66,6 +73,10 @@ export const actualizarUsuario = async (
       fecha_nacimiento: fechaNacimiento
     }),
   });
+
+  const sesionValida = await verificarSesion(respuesta);
+
+  if (!sesionValida) return null;
 
   const datos = await respuesta.json();
 
@@ -79,5 +90,62 @@ export const eliminarUsuario = async (id: number) => {
   });
 
   const datos = await respuesta.json();
+  return { respuesta, datos };
+};
+
+// Obtiene el perfil del usuario autenticado.
+export const obtenerPerfil = async () => {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) return null;
+
+  const respuesta = await fetch(
+    `${API_URL}/usuarios/perfil`,
+    {
+      method: 'GET',
+      headers: {
+        'Authorization': token
+      }
+    }
+  );
+
+  const sesionValida = await verificarSesion(respuesta);
+
+  if (!sesionValida) return null;
+
+  const datos = await respuesta.json();
+
+  return {
+    respuesta,
+    datos: datos.usuario
+  };
+};
+
+// Actualiza la contraseña de un usuario.
+export const actualizarContrasena = async (
+  id: number,
+  contrasena: string
+) => {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) return null;
+
+  const respuesta = await fetch(`${API_URL}/usuarios/${id}/contrasena`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token
+    },
+    body: JSON.stringify({
+      contrasena
+    }),
+  });
+
+  const sesionValida = await verificarSesion(respuesta);
+
+  if (!sesionValida) return null;
+
+  const datos = await respuesta.json();
+
   return { respuesta, datos };
 };

@@ -15,22 +15,24 @@ export const perfilStyles = StyleSheet.create({
   },
   tarjetaPerfil: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    padding: 15,
     borderRadius: 16,
-    padding: 18,
-    marginBottom: 16,
+    marginBottom: 10,
+    backgroundColor: '#FFFFFF'
   },
   avatar: {
     width: 75,
     height: 75,
     borderRadius: 50,
-    backgroundColor: '#E42BB8',
+    backgroundColor: 'rgba(228, 43, 184, 0.12)',
+    borderWidth: 1.5,
+    borderColor: '#E42BB8',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
   },
   iniciales: {
-    color: '#FFFFFF',
+    color: '#8F1568',
     fontSize: 25,
     fontFamily: 'Poppins_600SemiBold',
   },
@@ -49,20 +51,21 @@ export const perfilStyles = StyleSheet.create({
   tarjetaInformacion: {
     backgroundColor: 'rgba(255,255,255,0.95)',
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
+    padding: 15,
+    marginBottom: 20,
+    gap: 15
   },
   tituloSeccion: {
     color: '#9F167C',
     fontSize: 16,
     fontFamily: 'Poppins_600SemiBold',
-    marginBottom: 14,
+    marginBottom: 8,
   },
   filaInformacion: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginBottom: 14,
+    marginBottom: 1,
   },
   detalleInformacion: {
     flex: 1,
@@ -79,15 +82,15 @@ export const perfilStyles = StyleSheet.create({
     marginTop: 2,
   },
   opciones: {
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    borderRadius: 16,
-    paddingHorizontal: 15,
-    marginBottom: 18,
+    gap: 10,
+    marginBottom: 40,
   },
   filaOpcion: {
     flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     alignItems: 'center',
-    paddingVertical: 16,
+    padding: 15,
     gap: 12,
   },
   textoOpcion: {
@@ -98,5 +101,11 @@ export const perfilStyles = StyleSheet.create({
   },
   navegacion: {
     marginBottom: 5,
+  },
+  cargando: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FCE3EE'
   }
 });

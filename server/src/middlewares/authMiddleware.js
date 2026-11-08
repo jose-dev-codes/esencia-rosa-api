@@ -1,0 +1,57 @@
+// Importa jsonwebtoken para verificar la validez del token recibido.
+import jwt from "jsonwebtoken";
+
+// Importa el servicio para comprobar si el token fue revocado.
+import * as authServicio from "../services/authServicio.js";
+
+export const verificarAutenticacion = async (req, res, next) => {
+    // Obtiene el encabezado de autorización.
+    const encabezadoAutorizacion = req.headers["authorization"];
+
+    // Verifica que exista el encabezado y tenga el formato Bearer.
+    if (!encabezadoAutorizacion || !encabezadoAutorizacion.startsWith("Bearer ")) {
+        return res.status(401).json({
+            error: "Acceso denegado. Encabezado de autorización ausente o mal formado."
+        });
+    }
+
+    const token = encabezadoAutorizacion.split(" ")[1];
+
+    try {
+        // Verifica el token utilizando la clave secreta configurada.
+        const datosToken = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Verifica que el token tenga un identificador único.
+        if (!datosToken.jti) {
+            return res.status(403).json({
+                error: "Token inválido o sin identificador."
+            });
+        }
+
+        // Comprueba mediante el servicio si el token fue revocado.
+        const revocado = await authServicio.verificarTokenRevocado(datosToken.jti);
+
+        if (revocado) {
+            return res.status(403).json({
+                error: "La sesión ha sido cerrada. Inicia sesión nuevamente."
+            });
+        }
+
+        req.usuario = datosToken;
+
+        next();
+
+    } catch (error) {
+        // Rechaza tokens inválidos o expirados.
+        if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+            return res.status(403).json({
+                error: "Token inválido o expirado."
+            });
+        }
+
+        // Informa si ocurre un error inesperado al verificar la autenticación.
+        return res.status(500).json({
+            error: "Error interno al verificar la autenticación."
+        });
+    }
+};

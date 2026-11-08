@@ -2,13 +2,7 @@
 import * as usuarioModelo from "../models/usuarioModelo.js";
 
 import bcrypt from "bcryptjs";
-
-// Obtiene la fecha actual según la zona horaria de Colombia.
-const obtenerFechaActual = () => {
-    return new Intl.DateTimeFormat("en-CA", {
-        timeZone: "America/Bogota"
-    }).format(new Date());
-};
+import { obtenerFechaActual } from "../utils/validacionUtilidades.js";
 
 // Busca un usuario mediante su correo electrónico.
 export const consultarUsuarioPorCorreo = (correo) => {

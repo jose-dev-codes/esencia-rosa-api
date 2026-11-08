@@ -1,4 +1,4 @@
-import PantallaPerfil from '../screens/pantalla-perfil';
+import PantallaPerfil from '@/screens/pantalla-perfil';
 
 const Perfil = () => {
   return <PantallaPerfil />;

@@ -18,21 +18,21 @@ const BarraNavegacion = () => {
       <TouchableOpacity
         style={[
           barraNavegacionStyles.entrada,
-          rutaActual === '/home' && barraNavegacionStyles.entradaActiva
+          rutaActual === '/inicio' && barraNavegacionStyles.entradaActiva
         ]}
-        onPress={() => navegar('/home')}
+        onPress={() => navegar('/inicio')}
       >
         <MaterialCommunityIcons
           name='home'
           size={26}
-          color={rutaActual === '/home' ? '#FFFFFF' : '#E42BB8'}
+          color={rutaActual === '/inicio' ? '#FFFFFF' : '#E42BB8'}
         />
 
         <Text
           style={[
             barraNavegacionStyles.texto,
             {
-              color: rutaActual === '/home'
+              color: rutaActual === '/inicio'
                 ? '#FFFFFF'
                 : '#E42BB8'
             }
