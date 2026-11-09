@@ -40,8 +40,9 @@ export const inicioStyles = StyleSheet.create({
     color: '#E42BB8',
     fontSize: 15,
     fontFamily: 'Poppins_500Medium',
-    marginTop: 3,
-    marginBottom: 5
+    lineHeight: 20,
+    marginTop: 4,
+    marginBottom: 6
   },
   datoTarjeta: {
     color: '#5F5359',
@@ -80,7 +81,8 @@ export const inicioStyles = StyleSheet.create({
     color: '#9F167C',
     fontSize: 18,
     fontFamily: 'Poppins_500Medium',
-    marginBottom: 8
+    lineHeight: 23,
+    marginBottom: 10
   },
   navegacion: {
     marginBottom: 5

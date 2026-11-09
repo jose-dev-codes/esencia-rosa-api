@@ -35,17 +35,21 @@ export const perfilStyles = StyleSheet.create({
     color: '#8F1568',
     fontSize: 25,
     fontFamily: 'Poppins_600SemiBold',
+    letterSpacing: -1,
+    lineHeight: 30
   },
   nombre: {
     color: '#8F1568',
-    fontSize: 17,
-    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 18,
+    fontFamily: 'Poppins_500Medium',
+    lineHeight: 23,
     textAlign: 'center',
   },
   correo: {
     color: '#5F5359',
     fontSize: 13,
     fontFamily: 'Poppins_400Regular',
+    lineHeight: 18,
     marginTop: 4,
   },
   tarjetaInformacion: {
@@ -58,8 +62,9 @@ export const perfilStyles = StyleSheet.create({
   tituloSeccion: {
     color: '#9F167C',
     fontSize: 16,
-    fontFamily: 'Poppins_600SemiBold',
-    marginBottom: 8,
+    fontFamily: 'Poppins_500Medium',
+    lineHeight: 21,
+    marginBottom: 10,
   },
   filaInformacion: {
     flexDirection: 'row',
@@ -72,14 +77,16 @@ export const perfilStyles = StyleSheet.create({
   },
   etiqueta: {
     color: '#8F1568',
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: 'Poppins_400Regular',
+    lineHeight: 18
   },
   dato: {
     color: '#5F5359',
     fontSize: 14,
     fontFamily: 'Poppins_500Medium',
-    marginTop: 2,
+    lineHeight: 19,
+    marginTop: 5,
   },
   opciones: {
     gap: 10,
@@ -96,8 +103,9 @@ export const perfilStyles = StyleSheet.create({
   textoOpcion: {
     flex: 1,
     color: '#8F1568',
-    fontSize: 13,
-    fontFamily: 'Poppins_500Medium',
+    fontSize: 14,
+    fontFamily: 'Poppins_400Regular',
+    lineHeight: 19
   },
   navegacion: {
     marginBottom: 5,

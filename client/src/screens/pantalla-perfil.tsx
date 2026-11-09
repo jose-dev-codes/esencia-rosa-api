@@ -72,7 +72,7 @@ const PantallaPerfil = () => {
           <View style={perfilStyles.filaInformacion}>
             <MaterialCommunityIcons
               name='phone-outline'
-              size={22}
+              size={23}
               color='#E42BB8'
             />
 
@@ -85,7 +85,7 @@ const PantallaPerfil = () => {
           <View style={perfilStyles.filaInformacion}>
             <MaterialCommunityIcons
               name='calendar-month-outline'
-              size={22}
+              size={23}
               color='#E42BB8'
             />
 
