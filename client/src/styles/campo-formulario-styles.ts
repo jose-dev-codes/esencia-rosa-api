@@ -38,5 +38,10 @@ export const campoFormularioStyles = StyleSheet.create({
     lineHeight: 18,
     color: '#D63031',
     fontFamily: 'Poppins_500Medium'
+  },
+  contenedorInputDeshabilitado: {
+    backgroundColor: '#EDEDED',
+    borderColor: '#A8A8A8',
+    opacity: 0.8
   }
 });

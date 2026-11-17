@@ -35,7 +35,7 @@ export const perfilStyles = StyleSheet.create({
     color: '#8F1568',
     fontSize: 25,
     fontFamily: 'Poppins_600SemiBold',
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     lineHeight: 30
   },
   nombre: {

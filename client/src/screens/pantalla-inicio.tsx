@@ -5,32 +5,37 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { obtenerPerfil } from '@/services/usuario-servicio';
+import { obtenerProximaCita } from '@/services/cita-servicio';
+import { formatearFechaLarga, formatearHora12 } from '@/utils/formulario-utilidades';
 import Encabezado from '@/components/encabezado';
 import BarraNavegacion from '@/components/barra-navegacion';
+
 import {
   IconCalendarTime,
   IconClock,
   IconMapPin,
   IconCalendarPlus
 } from '@tabler/icons-react-native';
+
 import { inicioStyles } from '@/styles/inicio-styles';
 
 const PantallaInicio = () => {
   const [usuario, setUsuario] = useState<any>(null);
-
-  // Solo provisional para presentación
-  const proximaCita = {
-    servicio: 'Diseño de cejas',
-    fecha: '6 de mayo',
-    hora: '10:30 a.m.'
-  };
+  const [proximaCita, setProximaCita] = useState<any>(null);
 
   useFocusEffect(
     useCallback(() => {
+      const cargarProximaCita = async () => {
+        const resultado = await obtenerProximaCita();
+        if (resultado) setProximaCita(resultado.datos);
+      };
+
       const cargarPerfil = async () => {
         const resultado = await obtenerPerfil();
         if (resultado) setUsuario(resultado.datos);
       };
+
+      cargarProximaCita();
       cargarPerfil();
 
       const onBackPress = () => true;
@@ -65,11 +70,30 @@ const PantallaInicio = () => {
 
         <View style={inicioStyles.contenedorTarjetas}>
           <View style={inicioStyles.tarjeta}>
-            <IconCalendarTime size={30} color="#E42BB8" strokeWidth={1.8} />
+            <IconCalendarTime
+              size={30}
+              color="#E42BB8"
+              strokeWidth={1.8}
+            />
+
             <Text style={inicioStyles.tituloTarjeta}>Próxima cita</Text>
-            <Text style={inicioStyles.datoTarjeta}>• {proximaCita.servicio}</Text>
-            <Text style={inicioStyles.datoTarjeta}>• {proximaCita.fecha}</Text>
-            <Text style={inicioStyles.datoTarjeta}>• {proximaCita.hora}</Text>
+
+            {proximaCita ? (
+              <>
+                <Text style={inicioStyles.datoTarjeta}>
+                  • {proximaCita.servicio}
+                </Text>
+                <Text style={inicioStyles.datoTarjeta}>
+                  • {formatearFechaLarga(proximaCita.fecha)}
+                </Text>
+                <Text style={inicioStyles.datoTarjeta}>
+                  • {formatearHora12(proximaCita.hora)}
+                </Text>
+              </>
+            ) : (
+                <Text style={inicioStyles.datoTarjeta}>No tienes citas próximas</Text>
+            )}
+
           </View>
 
           <View style={inicioStyles.tarjetaAgendar}>

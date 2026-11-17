@@ -12,7 +12,8 @@ type CampoFormularioProps = {
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   icono?: keyof typeof MaterialCommunityIcons.glyphMap;
-  error?: string
+  error?: string;
+  deshabilitado?: boolean
 };
 
 const CampoFormulario = ({
@@ -24,21 +25,35 @@ const CampoFormulario = ({
   keyboardType = 'default',
   autoCapitalize = 'sentences',
   icono,
-  error
+  error,
+  deshabilitado = false
 }: CampoFormularioProps) => {
   return (
     <>
-      <Text style={campoFormularioStyles.etiqueta}>{label}</Text>
+      <Text
+        style={[
+          campoFormularioStyles.etiqueta,
+          deshabilitado ? {color: '#A8A8A8'} : null
+        ]}
+      >
+        {label}
+      </Text>
 
       <View style={[
         campoFormularioStyles.contenedorInput,
+        deshabilitado ? campoFormularioStyles.contenedorInputDeshabilitado : null,
         error ? campoFormularioStyles.contenedorInputError : null
       ]}>
         {icono && (
           <MaterialCommunityIcons
             name={icono}
             size={24}
-            color={error ? '#D63031' : '#D922AC'}
+            color={error
+              ? '#D63031'
+              : deshabilitado
+                ? '#A8A8A8'
+                : '#D922AC'
+            }
           />
         )}
 
@@ -50,6 +65,7 @@ const CampoFormulario = ({
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
+          editable={!deshabilitado}
         />
       </View>
 

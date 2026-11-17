@@ -6,7 +6,9 @@ type BotonProps = {
   onPress: () => void,
   flex?: number,
   borderRadius?: number,
-  variante?: 'principal' | 'secundario'
+  variante?: 'principal' | 'secundario',
+  sinSombra?: boolean,
+  paddingHorizontal?: number
 };
 
 // Componente reutilizable para mostrar botones de la aplicación.
@@ -15,7 +17,9 @@ const Boton = ({
   onPress,
   flex,
   borderRadius = 18,
-  variante = 'principal'
+  variante = 'principal',
+  sinSombra = false,
+  paddingHorizontal = 25
 }: BotonProps) => {
   return (
     <TouchableOpacity
@@ -24,14 +28,15 @@ const Boton = ({
         {
           flex,
           borderRadius,
+          paddingHorizontal,
           backgroundColor:
             variante === 'principal' ? '#E42BB8' : 'transparent',
           borderWidth:
             variante === 'secundario' ? 1 : 0,
           borderColor:
             variante === 'secundario' ? '#E42BB8' : 'transparent',
-          shadowOpacity: variante === 'principal' ? 0.2 : 0,
-          elevation: variante === 'principal' ? 3 : 0
+          shadowOpacity: variante === 'principal' && !sinSombra ? 0.2 : 0,
+          elevation: variante === 'principal' && !sinSombra ? 3 : 0
         }
       ]}
       onPress={onPress}
