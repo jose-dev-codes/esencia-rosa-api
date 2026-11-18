@@ -30,6 +30,7 @@ export const useDisponibilidadCita = (opciones?: {
   const mesVisibleNumero = mesVisible.getMonth();
 
   const esPrimerRender = useRef(true);
+  const esPrimeraCargaPantalla = useRef(true);
 
   useEffect(() => {
     const tiempo = setTimeout(() => {
@@ -50,18 +51,22 @@ export const useDisponibilidadCita = (opciones?: {
 
   useEffect(() => {
     const cargarEspecialistas = async () => {
-      setCargando(true);
-
       if (!idServicio) {
         setEspecialistas([]);
-        setCargando(false);
+        if (esPrimeraCargaPantalla.current) {
+          setCargando(false);
+          esPrimeraCargaPantalla.current = false;
+        }
         return;
       }
 
       const resultado = await obtenerEspecialistasPorServicio(idServicio);
       if (resultado) setEspecialistas(resultado.datos);
 
-      setCargando(false);
+      if (esPrimeraCargaPantalla.current) {
+        setCargando(false);
+        esPrimeraCargaPantalla.current = false;
+      }
     };
 
     if (!esPrimerRender.current) {

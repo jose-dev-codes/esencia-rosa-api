@@ -85,7 +85,7 @@ export const inicioStyles = StyleSheet.create({
     marginBottom: 10
   },
   navegacion: {
-    marginBottom: 5
+    marginVertical: 5
   },
   tarjetaAgendar: {
     width: '48%',
@@ -102,5 +102,9 @@ export const inicioStyles = StyleSheet.create({
     flex: 1,
     borderRadius: 13,
     padding: 11
-  }
+  },
+  areaSegura: {
+    flex: 1,
+    backgroundColor: '#FCE3EE'
+  },
 });

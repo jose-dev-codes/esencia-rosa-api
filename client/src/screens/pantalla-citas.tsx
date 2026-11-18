@@ -2,7 +2,6 @@ import {
   Alert,
   Animated,
   Image,
-  Modal,
   ScrollView,
   TouchableOpacity,
   Text,

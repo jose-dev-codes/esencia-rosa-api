@@ -22,9 +22,10 @@ import {
   formatearFechaLarga,
   formatearHora12,
   limpiarCampos,
-  limpiarError
+  limpiarError,
+  limpiarErroresCampo
 } from '@/utils/formulario-utilidades';
-import { limpiarErroresCampo } from '@/utils/formulario-utilidades';
+
 import { actualizarCita } from '@/services/cita-servicio';
 import { validarCita, ErroresCita } from '@/validators/cita-validador';
 import { registroStyles } from '@/styles/registro-styles';
@@ -33,7 +34,6 @@ const PantallaActualizarCita = () => {
   const router = useRouter();
   const { id, id_servicio, id_especialista, fecha, hora } = useLocalSearchParams();
 
-  const [alturaEncabezado, setAlturaEncabezado] = useState(0);
   const [errores, setErrores] = useState<ErroresCita>({});
   const [error, setError] = useState('');
   const [modalEspecialistasVisible, setModalEspecialistasVisible] = useState(false);
@@ -109,148 +109,142 @@ const PantallaActualizarCita = () => {
     }
   };
 
-  if (cargando) return <PantallaCarga />;
-
   return (
     <SafeAreaView style={registroStyles.areaSegura}>
-      <KeyboardAvoidingView
-        style={registroStyles.vistaTeclado}
-        behavior='padding'
-      >
-        <View
-          style={registroStyles.encabezado}
-          onLayout={(evento) =>
-            setAlturaEncabezado(evento.nativeEvent.layout.height)
-          }
+      {cargando ? (
+        <PantallaCarga />
+      ) : (
+        <KeyboardAvoidingView
+          style={registroStyles.vistaTeclado}
+          behavior='padding'
         >
-          <Encabezado titulo='Reagendar cita' />
-        </View>
-
-        <ScrollView
-          style={{
-            paddingTop: alturaEncabezado + 40,
-            marginTop: 5
-          }}
-          contentContainerStyle={registroStyles.contenedor}
-          keyboardShouldPersistTaps='handled'
-        >
-          <SelectorDesplegable
-            etiqueta='Especialista'
-            icono='account-outline'
-            valor={especialistaCita
-              ? (() => {
-                  const especialista = especialistas.find((especialista) =>
-                    especialista.id_usuario.toString() === especialistaCita
-                  );
-                  return especialista
-                    ? `${especialista.nombres} ${especialista.apellidos}`
-                    : '';
-                })()
-              : 'Selecciona un especialista'
-            }
-            error={errores.especialistaCita}
-            alPresionar={() => {
-              setModalEspecialistasVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'especialistaCita')
-            }}
-          />
-
-          <SelectorDesplegable
-            etiqueta='Fecha'
-            icono='calendar-outline'
-            valor={fechaCita
-              ? formatearFechaLarga(fechaCita, true)
-              : 'Selecciona una fecha'
-            }
-            deshabilitado={especialistaCita === ''}
-            error={errores.fechaCita}
-            alPresionar={() => {
-              if (especialistaCita) setModalFechaVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'fechaCita')
-            }}
-          />
-
-          <SelectorDesplegable
-            etiqueta='Hora'
-            icono='clock-outline'
-            valor={horaCita
-              ? formatearHora12(horaCita)
-              : 'Selecciona una hora'
-            }
-            deshabilitado={fechaCita === ''}
-            error={errores.horaCita}
-            alPresionar={() => {
-              if (fechaCita) setModalHoraVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'horaCita')
-            }}
-          />
-
-          {error && <MensajeError mensaje={error} />}
-
-          <View style={registroStyles.contenedorBotones}>
-            <Boton
-              texto='Guardar cambios'
-              onPress={guardarCambios}
-            />
+          <View style={registroStyles.encabezado}>
+            <Encabezado titulo='Reagendar cita' />
           </View>
-        </ScrollView>
 
-        <ModalEspecialistas
-          visible={modalEspecialistasVisible}
-          alCerrar={() => setModalEspecialistasVisible(false)}
-          especialistas={especialistas}
-          alSeleccionar={(id) => {
-            setEspecialistaCita(id);
-            setErrores((prev) => ({
-              ...prev,
-              especialistaCita: '',
-              fechaCita: '',
-              horaCita: ''
-            }));
-            setError('');
-          }}
-        />
+          <ScrollView
+            style={{ paddingTop: 30 }}
+            contentContainerStyle={registroStyles.contenedor}
+            keyboardShouldPersistTaps='handled'
+          >
+            <SelectorDesplegable
+              etiqueta='Especialista'
+              icono='account-outline'
+              valor={especialistaCita
+                ? (() => {
+                    const especialista = especialistas.find((especialista) =>
+                      especialista.id_usuario.toString() === especialistaCita
+                    );
+                    return especialista
+                      ? `${especialista.nombres} ${especialista.apellidos}`
+                      : '';
+                  })()
+                : 'Selecciona un especialista'
+              }
+              error={errores.especialistaCita}
+              alPresionar={() => {
+                setModalEspecialistasVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'especialistaCita')
+              }}
+            />
 
-        <ModalFecha
-          visible={modalFechaVisible}
-          alCerrar={() => setModalFechaVisible(false)}
-          anioVisible={anioVisible}
-          mesVisible={mesVisible}
-          mesVisibleNumero={mesVisibleNumero}
-          diasDisponibles={diasDisponibles}
-          fechaCita={fechaCita}
-          alCambiarMes={setMesVisible}
-          alSeleccionar={(fecha) => {
-            setFechaCita(fecha);
-            setErrores((prev) => ({
-              ...prev,
-              fechaCita: '',
-              horaCita: ''
-            }));
-            setError('');
-          }}
-        />
+            <SelectorDesplegable
+              etiqueta='Fecha'
+              icono='calendar-outline'
+              valor={fechaCita
+                ? formatearFechaLarga(fechaCita, true)
+                : 'Selecciona una fecha'
+              }
+              deshabilitado={especialistaCita === ''}
+              error={errores.fechaCita}
+              alPresionar={() => {
+                if (especialistaCita) setModalFechaVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'fechaCita')
+              }}
+            />
 
-        <ModalHora
-          visible={modalHoraVisible}
-          alCerrar={() => setModalHoraVisible(false)}
-          horasDisponibles={horasDisponibles}
-          alSeleccionar={(hora) => {
-            setHoraCita(hora);
-            setErrores((prev) => ({
-              ...prev,
-              horaCita: ''
-            }));
-            setError('');
-          }}
-        />
+            <SelectorDesplegable
+              etiqueta='Hora'
+              icono='clock-outline'
+              valor={horaCita
+                ? formatearHora12(horaCita)
+                : 'Selecciona una hora'
+              }
+              deshabilitado={fechaCita === ''}
+              error={errores.horaCita}
+              alPresionar={() => {
+                if (fechaCita) setModalHoraVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'horaCita')
+              }}
+            />
 
-        <ModalExito
-          visible={mostrarExito}
-          mensaje='Cita actualizada correctamente.'
-          onClose={() => router.back()}
-        />
-      </KeyboardAvoidingView>
+            {error && <MensajeError mensaje={error} />}
+
+            <View style={registroStyles.contenedorBotones}>
+              <Boton
+                texto='Guardar cambios'
+                onPress={guardarCambios}
+              />
+            </View>
+          </ScrollView>
+
+          <ModalEspecialistas
+            visible={modalEspecialistasVisible}
+            alCerrar={() => setModalEspecialistasVisible(false)}
+            especialistas={especialistas}
+            alSeleccionar={(id) => {
+              setEspecialistaCita(id);
+              setErrores((prev) => ({
+                ...prev,
+                especialistaCita: '',
+                fechaCita: '',
+                horaCita: ''
+              }));
+              setError('');
+            }}
+          />
+
+          <ModalFecha
+            visible={modalFechaVisible}
+            alCerrar={() => setModalFechaVisible(false)}
+            anioVisible={anioVisible}
+            mesVisible={mesVisible}
+            mesVisibleNumero={mesVisibleNumero}
+            diasDisponibles={diasDisponibles}
+            fechaCita={fechaCita}
+            alCambiarMes={setMesVisible}
+            alSeleccionar={(fecha) => {
+              setFechaCita(fecha);
+              setErrores((prev) => ({
+                ...prev,
+                fechaCita: '',
+                horaCita: ''
+              }));
+              setError('');
+            }}
+          />
+
+          <ModalHora
+            visible={modalHoraVisible}
+            alCerrar={() => setModalHoraVisible(false)}
+            horasDisponibles={horasDisponibles}
+            alSeleccionar={(hora) => {
+              setHoraCita(hora);
+              setErrores((prev) => ({
+                ...prev,
+                horaCita: ''
+              }));
+              setError('');
+            }}
+          />
+
+          <ModalExito
+            visible={mostrarExito}
+            mensaje='Cita actualizada correctamente.'
+            onClose={() => router.back()}
+          />
+        </KeyboardAvoidingView>
+      )}
     </SafeAreaView>
   );
 };

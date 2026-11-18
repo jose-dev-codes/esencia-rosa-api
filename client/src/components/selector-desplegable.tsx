@@ -3,7 +3,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { crearCitaStyles } from '@/styles/crear-cita-styles';
 import { campoFormularioStyles } from '@/styles/campo-formulario-styles';
-import { ZoomTransitionTargetContext } from 'expo-router/build/link/zoom/zoom-transition-context';
 
 type SelectorDesplegableProps = {
   etiqueta: string;

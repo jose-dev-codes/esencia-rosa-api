@@ -28,7 +28,6 @@ import Boton from '@/components/boton';
 import CampoFormulario from '@/components/campo-formulario';
 import ModalExito from '@/components/modal-exito';
 import MensajeError from '@/components/mensaje-error';
-import PantallaCarga from '@/components/pantalla-carga';
 
 import { registroStyles } from '@/styles/registro-styles';
 
@@ -40,18 +39,12 @@ const PantallaCambiarContrasena = () => {
   const [error, setError] = useState('');
   const [errores, setErrores] = useState<ErroresCambioContrasena>({});
   const [mostrarExito, setMostrarExito] = useState(false);
-  const [cargando, setCargando] = useState(true);
-  const [alturaEncabezado, setAlturaEncabezado] = useState(0);
 
   useEffect(() => {
     const cargarPerfil = async () => {
       const resultado = await obtenerPerfil();
 
-      if (resultado) {
-        setIdUsuario(resultado.datos.id_usuario);
-      }
-
-      setCargando(false);
+      if (resultado) setIdUsuario(resultado.datos.id_usuario);
     };
 
     cargarPerfil();
@@ -108,28 +101,18 @@ const PantallaCambiarContrasena = () => {
     }
   };
 
-  if (cargando) return <PantallaCarga />;
-
   return (
     <SafeAreaView style={registroStyles.areaSegura}>
       <KeyboardAvoidingView
         style={registroStyles.vistaTeclado}
         behavior='padding'
       >
-        <View
-          style={registroStyles.encabezado}
-          onLayout={(evento) =>
-            setAlturaEncabezado(evento.nativeEvent.layout.height)
-          }
-        >
+        <View style={registroStyles.encabezado}>
           <Encabezado titulo='Cambiar contraseña' />
         </View>
 
         <ScrollView
-          style={{
-            paddingTop: alturaEncabezado + 40,
-            marginTop: 5
-          }}
+          style={{ paddingTop: 30 }}
           contentContainerStyle={registroStyles.contenedor}
           keyboardShouldPersistTaps='handled'
         >

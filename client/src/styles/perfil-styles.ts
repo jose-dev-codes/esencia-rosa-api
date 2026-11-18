@@ -7,11 +7,11 @@ export const perfilStyles = StyleSheet.create({
   },
   encabezado: {
     marginTop: 5,
+    marginBottom: 10
   },
   contenido: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 20,
+    flexGrow: 1,
+    paddingHorizontal: 20,
   },
   tarjetaPerfil: {
     alignItems: 'center',
@@ -108,7 +108,7 @@ export const perfilStyles = StyleSheet.create({
     lineHeight: 19
   },
   navegacion: {
-    marginBottom: 5,
+    marginVertical: 5
   },
   cargando: {
     flex: 1,

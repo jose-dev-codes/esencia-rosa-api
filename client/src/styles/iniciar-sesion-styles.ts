@@ -19,10 +19,7 @@ export const iniciarSesionStyles = StyleSheet.create({
     backgroundColor: '#FCE3EE'
   },
   encabezado: {
-    position: 'absolute',
-    top: 5,
-    left: 0,
-    right: 0,
-    zIndex: 1
+    marginTop: 5,
+    marginBottom: 10
   }
 });

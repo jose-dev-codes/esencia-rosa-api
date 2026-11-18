@@ -7,6 +7,7 @@ import {
 import { crearCita } from '@/services/cita-servicio';
 import { useState } from 'react';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   limpiarError,
   limpiarCampos,
@@ -19,6 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { registroStyles } from '@/styles/registro-styles';
 import { useDisponibilidadCita } from '@/hooks/disponibilidad-cita';
 
+import MaskedView from '@react-native-masked-view/masked-view';
 import Encabezado from '@/components/encabezado';
 import Boton from '@/components/boton';
 import SelectorDesplegable from '@/components/selector-desplegable';
@@ -34,7 +36,6 @@ const PantallaCrearCita = () => {
   const [error, setError] = useState('');
   const [errores, setErrores] = useState<ErroresCita>({});
   const [mostrarExito, setMostrarExito] = useState(false);
-  const [alturaEncabezado, setAlturaEncabezado] = useState(0);
   const [modalEspecialistasVisible, setModalEspecialistasVisible] = useState(false);
   const [modalFechaVisible, setModalFechaVisible] = useState(false);
   const [modalHoraVisible, setModalHoraVisible] = useState(false);
@@ -111,101 +112,110 @@ const PantallaCrearCita = () => {
         style={registroStyles.vistaTeclado}
         behavior="padding"
       >
-        <View style={registroStyles.encabezado}
-          onLayout={(evento) =>
-            setAlturaEncabezado(evento.nativeEvent.layout.height)
-          }
-        >
+        <View style={registroStyles.encabezado}>
           <Encabezado titulo='Agendar cita' />
         </View>
 
-        <ScrollView
-          style={{
-            paddingTop: alturaEncabezado + 40,
-            marginTop: 5
-          }}
-          contentContainerStyle={registroStyles.contenedor}
-          keyboardShouldPersistTaps="handled"
-        >
-
-          <SelectorDesplegable
-            etiqueta='Servicio'
-            icono='creation'
-            valor={idServicio
-              ? servicios.find((servicio) =>
-                  servicio.id_servicio.toString() === idServicio
-                )?.nombre ?? ''
-              : 'Selecciona un servicio'
-            }
-            error={errores.idServicio}
-            alPresionar={() => {
-              setModalServiciosVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'idServicio');
-            }}
-          />
-
-          <SelectorDesplegable
-            etiqueta='Especialista'
-            icono='account-outline'
-            valor={especialistaCita
-              ? (() => {
-                  const especialista = especialistas.find((especialista) =>
-                    especialista.id_usuario.toString() === especialistaCita
-                  );
-                  return especialista
-                    ? `${especialista.nombres} ${especialista.apellidos}`
-                    : ''
-                })()
-              : 'Selecciona un especialista'
-            }
-            deshabilitado={idServicio === ''}
-            error={errores.especialistaCita}
-            alPresionar={() => {
-              setModalEspecialistasVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'especialistaCita');
-            }}
-          />
-
-          <SelectorDesplegable
-            etiqueta='Fecha'
-            icono='calendar-outline'
-            valor={fechaCita
-              ? formatearFechaLarga(fechaCita, true)
-              : 'Selecciona una fecha'
-            }
-            deshabilitado={especialistaCita === ''}
-            error={errores.fechaCita}
-            alPresionar={() => {
-              if (especialistaCita) setModalFechaVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'fechaCita');
-            }}
-          />
-
-          <SelectorDesplegable
-            etiqueta='Hora'
-            icono='clock-outline'
-            valor={horaCita
-              ? formatearHora12(horaCita)
-              : 'Selecciona una hora'
-            }
-            deshabilitado={fechaCita === ''}
-            error={errores.horaCita}
-            alPresionar={() => {
-              if (fechaCita) setModalHoraVisible(true);
-              limpiarErroresCampo(setError, setErrores, 'horaCita');
-            }}
-          />
-
-          {error && <MensajeError mensaje={error} />}
-
-          <View style={registroStyles.contenedorBotones}>
-            <Boton
-              texto='Agendar'
-              onPress={guardarCita}
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={
+            <LinearGradient
+              colors={[
+                'transparent',
+                'black',
+                'black',
+                'transparent'
+              ]}
+              locations={[0, 0.015, 0.985, 1]}
+              style={{ flex: 1 }}
             />
-          </View>
+          }
+        >
+          <ScrollView
+            style={{ paddingTop: 30 }}
+            contentContainerStyle={registroStyles.contenedor}
+            keyboardShouldPersistTaps="handled"
+          >
 
-        </ScrollView>
+            <SelectorDesplegable
+              etiqueta='Servicio'
+              icono='creation'
+              valor={idServicio
+                ? servicios.find((servicio) =>
+                    servicio.id_servicio.toString() === idServicio
+                  )?.nombre ?? ''
+                : 'Selecciona un servicio'
+              }
+              error={errores.idServicio}
+              alPresionar={() => {
+                setModalServiciosVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'idServicio');
+              }}
+            />
+
+            <SelectorDesplegable
+              etiqueta='Especialista'
+              icono='account-outline'
+              valor={especialistaCita
+                ? (() => {
+                    const especialista = especialistas.find((especialista) =>
+                      especialista.id_usuario.toString() === especialistaCita
+                    );
+                    return especialista
+                      ? `${especialista.nombres} ${especialista.apellidos}`
+                      : ''
+                  })()
+                : 'Selecciona un especialista'
+              }
+              deshabilitado={idServicio === ''}
+              error={errores.especialistaCita}
+              alPresionar={() => {
+                setModalEspecialistasVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'especialistaCita');
+              }}
+            />
+
+            <SelectorDesplegable
+              etiqueta='Fecha'
+              icono='calendar-outline'
+              valor={fechaCita
+                ? formatearFechaLarga(fechaCita, true)
+                : 'Selecciona una fecha'
+              }
+              deshabilitado={especialistaCita === ''}
+              error={errores.fechaCita}
+              alPresionar={() => {
+                if (especialistaCita) setModalFechaVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'fechaCita');
+              }}
+            />
+
+            <SelectorDesplegable
+              etiqueta='Hora'
+              icono='clock-outline'
+              valor={horaCita
+                ? formatearHora12(horaCita)
+                : 'Selecciona una hora'
+              }
+              deshabilitado={fechaCita === ''}
+              error={errores.horaCita}
+              alPresionar={() => {
+                if (fechaCita) setModalHoraVisible(true);
+                limpiarErroresCampo(setError, setErrores, 'horaCita');
+              }}
+            />
+
+            {error && <MensajeError mensaje={error} />}
+
+            <View style={registroStyles.contenedorBotones}>
+              <Boton
+                texto='Agendar'
+                onPress={guardarCita}
+              />
+            </View>
+
+          </ScrollView>
+        </MaskedView>
 
         <ModalServicios
           visible={modalServiciosVisible}

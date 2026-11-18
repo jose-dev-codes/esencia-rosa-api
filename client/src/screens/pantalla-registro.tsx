@@ -7,21 +7,26 @@ import {
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import {
   actualizarCampo,
   limpiarCampos,
   limpiarError,
-  limpiarErroresCampo
+  limpiarErroresCampo,
+  formatearFechaLarga
 } from '@/utils/formulario-utilidades';
 
 import { validarRegistro, ErroresRegistro } from '@/validators/usuario-validador';
 
+import MaskedView from '@react-native-masked-view/masked-view';
 import Boton from '@/components/boton';
 import CampoFormulario from '@/components/campo-formulario';
 import MensajeError from '@/components/mensaje-error';
 import Encabezado from '@/components/encabezado';
 import ModalExito from '@/components/modal-exito';
+import ModalFechaNacimiento from '@/components/modal-fecha-nacimiento';
+import SelectorDesplegable from '@/components/selector-desplegable';
 import { registroStyles } from '@/styles/registro-styles';
 import { registrarUsuario } from '@/services/usuario-servicio';
 
@@ -32,8 +37,8 @@ const PantallaRegistro = () => {
   const [contrasenaUsuario, setContrasenaUsuario] = useState('');
   const [numeroTelefonoUsuario, setNumeroTelefonoUsuario] = useState('');
   const [fechaNacimientoUsuario, setFechaNacimientoUsuario] = useState('');
-  const [alturaEncabezado, setAlturaEncabezado] = useState(0);
   const [mostrarExito, setMostrarExito] = useState(false);
+  const [mostrarCalendario, setMostrarCalendario] = useState(false);
   const [error, setError] = useState('');
   const [errores, setErrores] = useState<ErroresRegistro>({});
 
@@ -106,119 +111,134 @@ const PantallaRegistro = () => {
         style={registroStyles.vistaTeclado}
         behavior="padding"
       >
-        <View
-          style={registroStyles.encabezado}
-          onLayout={(evento =>
-            setAlturaEncabezado(evento.nativeEvent.layout.height))
-          }
-        >
+        <View style={registroStyles.encabezado}>
           <Encabezado titulo='Registro' />
         </View>
 
-        <ScrollView
-          style={{
-            paddingTop: alturaEncabezado + 40,
-            marginTop: 5
-          }}
-          contentContainerStyle={registroStyles.contenedor}
-          keyboardShouldPersistTaps="handled"
-        >
-
-          <CampoFormulario
-            label='Nombres'
-            placeholder='Escribe tus nombres'
-            value={nombresUsuario}
-            icono='account-outline'
-            autoCapitalize='words'
-            error={errores.nombres}
-            onChangeText={(texto) =>
-              actualizarCampo(texto, setNombresUsuario, () =>
-                limpiarErroresCampo(setError, setErrores, 'nombres')
-              )
-            }
-          />
-
-          <CampoFormulario
-            label='Apellidos'
-            placeholder='Escribe tus apellidos'
-            value={apellidosUsuario}
-            icono='account-multiple-outline'
-            autoCapitalize='words'
-            error={errores.apellidos}
-            onChangeText={(texto) =>
-              actualizarCampo(texto, setApellidosUsuario, () =>
-                limpiarErroresCampo(setError, setErrores, 'apellidos')
-              )
-            }
-          />
-
-          <CampoFormulario
-            label='Correo'
-            placeholder='ejemplo@correo.com'
-            value={correoUsuario}
-            icono='email-outline'
-            keyboardType='email-address'
-            autoCapitalize='none'
-            error={errores.correo}
-            onChangeText={(texto) =>
-              actualizarCampo(texto, setCorreoUsuario, () =>
-                limpiarErroresCampo(setError, setErrores, 'correo')
-              )
-            }
-          />
-
-          <CampoFormulario
-            label='Contraseña'
-            placeholder='Escribe tu contraseña'
-            value={contrasenaUsuario}
-            icono='lock-outline'
-            secureTextEntry
-            autoCapitalize='none'
-            error={errores.contrasena}
-            onChangeText={(texto) =>
-              actualizarCampo(texto, setContrasenaUsuario, () =>
-                limpiarErroresCampo(setError, setErrores, 'contrasena')
-              )
-            }
-          />
-
-          <CampoFormulario
-            label='Número de teléfono'
-            placeholder='Ej: 3001123456'
-            value={numeroTelefonoUsuario}
-            icono='phone-outline'
-            keyboardType='phone-pad'
-            error={errores.numeroTelefono}
-            onChangeText={(texto) =>
-              actualizarCampo(texto, setNumeroTelefonoUsuario, () =>
-                limpiarErroresCampo(setError, setErrores, 'numeroTelefono')
-              )
-            }
-          />
-
-          <CampoFormulario
-            label='Fecha de nacimiento'
-            placeholder='AAAA-MM-DD'
-            value={fechaNacimientoUsuario}
-            icono='calendar-outline'
-            error={errores.fechaNacimiento}
-            onChangeText={(texto) =>
-              actualizarCampo(texto, setFechaNacimientoUsuario, () =>
-                limpiarErroresCampo(setError, setErrores, 'fechaNacimiento')
-              )
-            }
-          />
-
-          {error && <MensajeError mensaje={error} />}
-
-          <View style={registroStyles.contenedorBotones}>
-            <Boton
-              texto='Registrarse'
-              onPress={guardarInformacion}
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={
+            <LinearGradient
+              colors={[
+                'transparent',
+                'black',
+                'black',
+                'transparent'
+              ]}
+              locations={[0, 0.015, 0.985, 1]}
+              style={{ flex: 1 }}
             />
-          </View>
+          }
+        >
+          <ScrollView
+            style={{ paddingTop: 30 }}
+            contentContainerStyle={registroStyles.contenedor}
+            keyboardShouldPersistTaps="handled"
+          >
 
-        </ScrollView>
+            <CampoFormulario
+              label='Nombres'
+              placeholder='Escribe tus nombres'
+              value={nombresUsuario}
+              icono='account-outline'
+              autoCapitalize='words'
+              error={errores.nombres}
+              onChangeText={(texto) =>
+                actualizarCampo(texto, setNombresUsuario, () =>
+                  limpiarErroresCampo(setError, setErrores, 'nombres')
+                )
+              }
+            />
+
+            <CampoFormulario
+              label='Apellidos'
+              placeholder='Escribe tus apellidos'
+              value={apellidosUsuario}
+              icono='account-multiple-outline'
+              autoCapitalize='words'
+              error={errores.apellidos}
+              onChangeText={(texto) =>
+                actualizarCampo(texto, setApellidosUsuario, () =>
+                  limpiarErroresCampo(setError, setErrores, 'apellidos')
+                )
+              }
+            />
+
+            <CampoFormulario
+              label='Correo'
+              placeholder='ejemplo@correo.com'
+              value={correoUsuario}
+              icono='email-outline'
+              keyboardType='email-address'
+              autoCapitalize='none'
+              error={errores.correo}
+              onChangeText={(texto) =>
+                actualizarCampo(texto, setCorreoUsuario, () =>
+                  limpiarErroresCampo(setError, setErrores, 'correo')
+                )
+              }
+            />
+
+            <CampoFormulario
+              label='Contraseña'
+              placeholder='Escribe tu contraseña'
+              value={contrasenaUsuario}
+              icono='lock-outline'
+              secureTextEntry
+              autoCapitalize='none'
+              error={errores.contrasena}
+              onChangeText={(texto) =>
+                actualizarCampo(texto, setContrasenaUsuario, () =>
+                  limpiarErroresCampo(setError, setErrores, 'contrasena')
+                )
+              }
+            />
+
+            <CampoFormulario
+              label='Número de teléfono'
+              placeholder='Ej: 3001123456'
+              value={numeroTelefonoUsuario}
+              icono='phone-outline'
+              keyboardType='phone-pad'
+              error={errores.numeroTelefono}
+              onChangeText={(texto) =>
+                actualizarCampo(texto, setNumeroTelefonoUsuario, () =>
+                  limpiarErroresCampo(setError, setErrores, 'numeroTelefono')
+                )
+              }
+            />
+
+            <SelectorDesplegable
+              etiqueta='Fecha de nacimiento'
+              icono='calendar-outline'
+              valor={fechaNacimientoUsuario
+                ? formatearFechaLarga(fechaNacimientoUsuario, true)
+                : 'Selecciona una fecha'}
+              error={errores.fechaNacimiento}
+              alPresionar={() => {
+                setMostrarCalendario(true);
+                limpiarErroresCampo(setError, setErrores, 'fechaNacimiento');
+              }}
+            />
+
+            {error && <MensajeError mensaje={error} />}
+
+            <View style={registroStyles.contenedorBotones}>
+              <Boton
+                texto='Registrarse'
+                onPress={guardarInformacion}
+              />
+            </View>
+
+          </ScrollView>
+        </MaskedView>
+
+        <ModalFechaNacimiento
+          visible={mostrarCalendario}
+          alCerrar={() => setMostrarCalendario(false)}
+          fechaSeleccionada={fechaNacimientoUsuario}
+          alSeleccionar={(fecha) => setFechaNacimientoUsuario(fecha)}
+        />
 
         <ModalExito
           visible={mostrarExito}

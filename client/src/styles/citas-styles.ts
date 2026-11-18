@@ -211,7 +211,6 @@ export const citasStyles = StyleSheet.create({
     lineHeight: 20,
   },
   navegacion: {
-    marginTop: 5,
-    marginBottom: 5
+    marginVertical: 5
   }
 });

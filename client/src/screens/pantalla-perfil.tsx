@@ -1,11 +1,13 @@
-import { Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useCallback } from 'react';
 import { useFocusEffect, router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { obtenerPerfil } from '@/services/usuario-servicio';
 import { cerrarSesion } from '@/services/sesion-servicio';
 import { formatearFechaLarga } from '@/utils/formulario-utilidades';
+import MaskedView from '@react-native-masked-view/masked-view';
 import Encabezado from '@/components/encabezado';
 import Boton from '@/components/boton';
 import BarraNavegacion from '@/components/barra-navegacion';
@@ -43,118 +45,141 @@ const PantallaPerfil = () => {
     router.replace('/iniciar-sesion');
   };
 
-  if (cargando) return <PantallaCarga />;
-
   return (
     <SafeAreaView style={perfilStyles.contenedor}>
-      <View style={perfilStyles.encabezado}>
-        <Encabezado titulo='Mi perfil' />
-      </View>
-
-      <View style={perfilStyles.contenido}>
-        <View style={perfilStyles.tarjetaPerfil}>
-          <View style={perfilStyles.avatar}>
-            <Text style={perfilStyles.iniciales}>
-              {iniciales}
-            </Text>
+      {cargando ? (
+        <PantallaCarga />
+      ) : (
+        <>
+          <View style={perfilStyles.encabezado}>
+            <Encabezado titulo='Mi perfil' />
           </View>
 
-          <Text style={perfilStyles.nombre}>
-            {usuario?.nombres} {usuario?.apellidos}
-          </Text>
-
-          <Text style={perfilStyles.correo}>
-            {usuario?.correo}
-          </Text>
-        </View>
-
-        <View style={perfilStyles.tarjetaInformacion}>
-          <View style={perfilStyles.filaInformacion}>
-            <MaterialCommunityIcons
-              name='phone-outline'
-              size={23}
-              color='#E42BB8'
-            />
-
-            <View style={perfilStyles.detalleInformacion}>
-              <Text style={perfilStyles.etiqueta}>Teléfono</Text>
-              <Text style={perfilStyles.dato}>{usuario?.numero_telefono}</Text>
-            </View>
-          </View>
-
-          <View style={perfilStyles.filaInformacion}>
-            <MaterialCommunityIcons
-              name='calendar-month-outline'
-              size={23}
-              color='#E42BB8'
-            />
-
-            <View style={perfilStyles.detalleInformacion}>
-              <Text style={perfilStyles.etiqueta}>Fecha de nacimiento</Text>
-              <Text style={perfilStyles.dato}>
-                {usuario?.fecha_nacimiento
-                  ? formatearFechaLarga(usuario.fecha_nacimiento, true)
-                  : ''}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <Text style={perfilStyles.tituloSeccion}>Editar información</Text>
-        <View style={perfilStyles.opciones}>
-          <TouchableOpacity
-            style={perfilStyles.filaOpcion}
-            onPress={() => router.push('/actualizar-usuario')}
+          <MaskedView
+            style={{ flex: 1 }}
+            maskElement={
+              <LinearGradient
+                colors={[
+                  'transparent',
+                  'black',
+                  'black',
+                  'transparent'
+                ]}
+                locations={[0, 0.015, 0.985, 1]}
+                style={{ flex: 1 }}
+              />
+            }
           >
-            <MaterialCommunityIcons
-              name='account-edit-outline'
-              size={23}
-              color='#E42BB8'
-            />
+            <ScrollView
+              style={{ paddingTop: 10 }}
+              contentContainerStyle={perfilStyles.contenido}
+            >
+              <View style={perfilStyles.tarjetaPerfil}>
+                <View style={perfilStyles.avatar}>
+                  <Text style={perfilStyles.iniciales}>
+                    {iniciales}
+                  </Text>
+                </View>
 
-            <Text style={perfilStyles.textoOpcion}>
-              Actualizar datos personales
-            </Text>
+                <Text style={perfilStyles.nombre}>
+                  {usuario?.nombres} {usuario?.apellidos}
+                </Text>
 
-            <MaterialCommunityIcons
-              name='chevron-right'
-              size={24}
-              color='#8F1568'
-            />
-          </TouchableOpacity>
+                <Text style={perfilStyles.correo}>
+                  {usuario?.correo}
+                </Text>
+              </View>
 
-          <TouchableOpacity
-            style={perfilStyles.filaOpcion}
-            onPress={() => router.push('/cambiar-contrasena')}
-          >
-            <MaterialCommunityIcons
-              name='lock-reset'
-              size={23}
-              color='#E42BB8'
-            />
+              <View style={perfilStyles.tarjetaInformacion}>
+                <View style={perfilStyles.filaInformacion}>
+                  <MaterialCommunityIcons
+                    name='phone-outline'
+                    size={23}
+                    color='#E42BB8'
+                  />
 
-            <Text style={perfilStyles.textoOpcion}>
-              Cambiar contraseña
-            </Text>
+                  <View style={perfilStyles.detalleInformacion}>
+                    <Text style={perfilStyles.etiqueta}>Teléfono</Text>
+                    <Text style={perfilStyles.dato}>{usuario?.numero_telefono}</Text>
+                  </View>
+                </View>
 
-            <MaterialCommunityIcons
-              name='chevron-right'
-              size={24}
-              color='#8F1568'
-            />
-          </TouchableOpacity>
-        </View>
+                <View style={perfilStyles.filaInformacion}>
+                  <MaterialCommunityIcons
+                    name='calendar-month-outline'
+                    size={23}
+                    color='#E42BB8'
+                  />
 
-        <Boton
-          texto='Cerrar sesión'
-          onPress={manejarCerrarSesion}
-          variante='secundario'
-        />
-      </View>
+                  <View style={perfilStyles.detalleInformacion}>
+                    <Text style={perfilStyles.etiqueta}>Fecha de nacimiento</Text>
+                    <Text style={perfilStyles.dato}>
+                      {usuario?.fecha_nacimiento
+                        ? formatearFechaLarga(usuario.fecha_nacimiento, true)
+                        : ''}
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-      <View style={perfilStyles.navegacion}>
-        <BarraNavegacion />
-      </View>
+              <Text style={perfilStyles.tituloSeccion}>Editar información</Text>
+              <View style={perfilStyles.opciones}>
+                <TouchableOpacity
+                  style={perfilStyles.filaOpcion}
+                  onPress={() => router.push('/actualizar-usuario')}
+                >
+                  <MaterialCommunityIcons
+                    name='account-edit-outline'
+                    size={23}
+                    color='#E42BB8'
+                  />
+
+                  <Text style={perfilStyles.textoOpcion}>
+                    Actualizar datos personales
+                  </Text>
+
+                  <MaterialCommunityIcons
+                    name='chevron-right'
+                    size={24}
+                    color='#8F1568'
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={perfilStyles.filaOpcion}
+                  onPress={() => router.push('/cambiar-contrasena')}
+                >
+                  <MaterialCommunityIcons
+                    name='lock-reset'
+                    size={23}
+                    color='#E42BB8'
+                  />
+
+                  <Text style={perfilStyles.textoOpcion}>
+                    Cambiar contraseña
+                  </Text>
+
+                  <MaterialCommunityIcons
+                    name='chevron-right'
+                    size={24}
+                    color='#8F1568'
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <Boton
+                texto='Cerrar sesión'
+                onPress={manejarCerrarSesion}
+                variante='secundario'
+              />
+            </ScrollView>
+          </MaskedView>
+
+          <View style={perfilStyles.navegacion}>
+            <BarraNavegacion />
+          </View>
+        </>
+      )}
     </SafeAreaView>
   );
 };

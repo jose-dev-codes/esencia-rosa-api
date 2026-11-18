@@ -28,7 +28,6 @@ const PantallaIniciarSesion = () => {
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
   const [errores, setErrores] = useState<ErroresInicioSesion>({});
-  const [alturaEncabezado, setAlturaEncabezado] = useState(0);
 
   const manejarInicioSesion = async () => {
     limpiarError(setError);
@@ -76,20 +75,12 @@ const PantallaIniciarSesion = () => {
         style={iniciarSesionStyles.vistaTeclado}
         behavior='padding'
       >
-        <View
-          style={iniciarSesionStyles.encabezado}
-          onLayout={(evento) =>
-            setAlturaEncabezado(evento.nativeEvent.layout.height)
-          }
-        >
+        <View style={iniciarSesionStyles.encabezado}>
           <Encabezado titulo='Inicio de sesión' />
         </View>
 
         <ScrollView
-          style={{
-            paddingTop: alturaEncabezado + 40,
-            marginTop: 5
-          }}
+          style={{ paddingTop: 30 }}
           contentContainerStyle={iniciarSesionStyles.contenedor}
           keyboardShouldPersistTaps="handled"
         >
@@ -143,6 +134,7 @@ const PantallaIniciarSesion = () => {
 
           </View>
         </ScrollView>
+
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
