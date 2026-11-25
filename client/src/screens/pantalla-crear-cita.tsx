@@ -6,7 +6,7 @@ import {
 
 import { crearCita } from '@/services/cita-servicio';
 import { useState } from 'react';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   limpiarError,
@@ -40,6 +40,8 @@ const PantallaCrearCita = () => {
   const [modalFechaVisible, setModalFechaVisible] = useState(false);
   const [modalHoraVisible, setModalHoraVisible] = useState(false);
 
+  const { id_servicio } = useLocalSearchParams();
+
   const {
     idServicio,
     setIdServicio,
@@ -57,7 +59,9 @@ const PantallaCrearCita = () => {
     setMesVisible,
     anioVisible,
     mesVisibleNumero
-  } = useDisponibilidadCita();
+  } = useDisponibilidadCita({
+    idServicioInicial: typeof id_servicio === 'string' ? id_servicio : undefined
+  });
 
   // Envía los datos de la cita al backend y muestra un mensaje si se crea correctamente.
   const guardarCita = async () => {
@@ -104,7 +108,6 @@ const PantallaCrearCita = () => {
       setError('No se pudo conectar con el servidor.');
     }
   };
-
 
   return (
     <SafeAreaView style={registroStyles.areaSegura}>

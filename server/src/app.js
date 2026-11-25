@@ -13,6 +13,9 @@ import authRutas from "./routes/authRutas.js";
 // Importa las rutas de citas
 import citaRutas from "./routes/citaRutas.js";
 
+// Importa las rutas de servicios.
+import servicioRutas from "./routes/servicioRutas.js";
+
 // Crea la aplicación de Express.
 const app = express();
 
@@ -30,6 +33,9 @@ app.use("/api/auth", authRutas);
 
 // Registra las rutas del módulo de citas.
 app.use("/api/citas", citaRutas);
+
+// Registra las rutas del módulo de servicios.
+app.use("/api/servicios", servicioRutas);
 
 // Define una ruta básica para comprobar que la API funciona.
 app.get("/", (req, res) => {

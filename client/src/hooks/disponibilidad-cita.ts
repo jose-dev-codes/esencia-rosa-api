@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  obtenerServicios,
-  obtenerEspecialistasPorServicio,
   obtenerDiasDisponibles,
   obtenerHorasDisponibles
 } from '../services/cita-servicio';
+
+import {
+  obtenerServicios,
+  obtenerEspecialistasPorServicio
+} from '../services/servicio-servicio';
 
 export const useDisponibilidadCita = (opciones?: {
   idServicioInicial?: string;

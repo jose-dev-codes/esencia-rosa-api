@@ -25,6 +25,16 @@ export const campoFormularioStyles = StyleSheet.create({
     borderColor: '#D63031',
     marginBottom: 4
   },
+  contenedorSufijo: {
+    borderLeftWidth: 1,
+    borderColor: '#D922AC',
+    paddingLeft: 8
+  },
+  textoSufijo: {
+    fontSize: 16,
+    fontFamily: 'Poppins_400Regular',
+    lineHeight: 21
+  },
   campoTexto: {
     flex: 1,
     paddingVertical: 7,

@@ -6,7 +6,8 @@ type BotonTarjetaProps = {
   texto: string,
   onPress: () => void,
   flex?: number,
-  variante?: 'principal' | 'peligro'
+  variante?: 'principal' | 'peligro',
+  borderColor?: string
 };
 
 // Botón plano, sin sombra, para usar dentro de las tarjetas de citas.
@@ -14,7 +15,8 @@ const BotonTarjeta = ({
   texto,
   onPress,
   flex,
-  variante = 'principal'
+  variante = 'principal',
+  borderColor = 'rgba(228, 43, 184, 0.15)'
 }: BotonTarjetaProps) => {
   return (
     <TouchableOpacity
@@ -28,7 +30,7 @@ const BotonTarjeta = ({
               : 'rgba(214, 48, 49, 0.25)',
           borderColor:
             variante === 'principal'
-              ? 'rgba(228, 43, 184, 0.15)'
+              ? borderColor
               : 'rgba(214, 48, 49, 0.15)'
         }
       ]}

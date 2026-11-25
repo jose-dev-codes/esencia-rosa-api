@@ -158,31 +158,6 @@ export const eliminarCita = async (req, res) => {
     }
 };
 
-// Obtiene los especialistas de un servicio.
-export const obtenerEspecialistasPorServicio = async (req, res) => {
-    try {
-        const especialistas = await citaServicio.obtenerEspecialistasPorServicio(
-            req.params.idServicio
-        );
-
-        res.json(especialistas);
-    } catch (error) {
-        res.status(500).json({error: "Error al obtener los especialistas."});
-    }
-};
-
-// Momentáneo: lista servicios, luego se mueve a servicio-controlador
-export const listarServicios = async (req, res) => {
-    try {
-        const servicios = await citaServicio.listarServicios();
-
-        res.json(servicios);
-    } catch (error) {
-        console.error("Error al obtener los servicios.", error);
-        res.status(500).json({ error: "Error al obtener los servicios." });
-    }
-};
-
 export const obtenerHorariosPorEspecialista = async (req, res) => {
     try {
         const idEspecialista = Number(req.params.idEspecialista);

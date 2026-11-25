@@ -308,18 +308,6 @@ export const eliminarCita = async (id) => {
     };
 };
 
-// Obtiene los especialistas que ofrecen un servicio.
-export const obtenerEspecialistasPorServicio = (idServicio) => {
-    return servicioModelo.buscarEspecialistaPorServicio(idServicio);
-};
-
-// Obtiene los servicios disponibles
-
-export const listarServicios = () => {
-    return servicioModelo.obtenerTodosLosServicios();
-};
-
-
 export const obtenerHorariosPorEspecialista = async (idEspecialista) => {
     return await citaModelo.buscarHorariosPorEspecialista(idEspecialista);
 };

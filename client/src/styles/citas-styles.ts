@@ -177,19 +177,6 @@ export const citasStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FCE3EE'
   },
-  indicadorScroll: {
-    position: 'absolute',
-    right: 3,
-    top: 150,
-    height: '50%',
-    width: 3,
-  },
-  barraScroll: {
-    width: '100%',
-    height: 100,
-    backgroundColor: '#E42BB8',
-    borderRadius: 3,
-  },
   botonFlotante: {
     position: 'absolute',
     right: 20,

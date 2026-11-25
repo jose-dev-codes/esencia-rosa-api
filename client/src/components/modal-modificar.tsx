@@ -2,17 +2,28 @@ import { Modal, Text, View } from 'react-native';
 import { modalBaseStyles } from '@/styles/modal-base-styles';
 import Boton from '@/components/boton';
 
-type ModalEliminarCitaProps = {
+type ModalModificarProps = {
   visible: boolean,
+  accion: string,
+  nombre: string,
+  adjetivo: string,
+  advertencia?: string,
   alCerrar: () => void,
   alConfirmar: () => void
 };
 
-const ModalEliminarCita = ({
+const capitalizarPalabra = (palabra: string) =>
+  palabra.charAt(0).toUpperCase() + palabra.slice(1).toLocaleLowerCase();
+
+const ModalModificar = ({
   visible,
+  accion,
+  nombre,
+  adjetivo,
+  advertencia,
   alCerrar,
   alConfirmar
-}: ModalEliminarCitaProps) => {
+}: ModalModificarProps) => {
   return (
     <Modal
       visible={visible}
@@ -22,17 +33,24 @@ const ModalEliminarCita = ({
     >
       <View style={modalBaseStyles.fondoModal}>
         <View style={modalBaseStyles.modalContenido}>
-          <Text style={modalBaseStyles.tituloModal}>Cancelar cita</Text>
+          <Text style={modalBaseStyles.tituloModal}>
+            {`${capitalizarPalabra(accion)} ${nombre}`}
+          </Text>
 
           <Text style={modalBaseStyles.mensajeModal}>
-            ¿Estas seguro de que deseas cancelar esta cita?
+            {`¿Estas seguro de que deseas ${accion} ${adjetivo} ${nombre}`}
           </Text>
 
-          <Text style={modalBaseStyles.advertenciaModal}>
-            Si confirmas, no podrás reagendarla.
-          </Text>
+          {advertencia && (
+            <Text style={modalBaseStyles.advertenciaModal}>
+              {advertencia}
+            </Text>
+          )}
 
-          <View style={modalBaseStyles.botonesModal}>
+          <View style={[
+            modalBaseStyles.botonesModal,
+            !advertencia ? { marginTop: 5 } : null
+          ]}>
             <Boton
               texto='No'
               onPress={alCerrar}
@@ -43,7 +61,7 @@ const ModalEliminarCita = ({
             />
 
             <Boton
-              texto='Si, cancelar'
+              texto={`Si, ${accion}`}
               onPress={alConfirmar}
               flex={1}
               borderRadius={8}
@@ -57,4 +75,4 @@ const ModalEliminarCita = ({
   );
 };
 
-export default ModalEliminarCita;
+export default ModalModificar;

@@ -34,7 +34,7 @@ Permite a la aplicación:
 - pnpm (no se usa npm)
 - Postman para pruebas del backend
 - Expo Go para pruebas del frontend
-- Git + GitHub para versionamiento
+- Git + 【entity-GitHub¦canonical_name=GitHub】 para versionamiento
 
 ## Requisitos previos
 
@@ -170,6 +170,36 @@ Base: `http://localhost:3000/api`
 - `validarEspecialista` — revisa que exista, que sea especialista/admin y que esté activo.
 - Controller `crear` y `actualizar` ya leen los 2 `404`, de servicio y de especialista.
 
+**Servicios:**
+- `POST /servicios` — crear servicio
+- `GET /servicios` — listar servicios, cliente / especialista solo `activo`, admin todos
+- `PUT /servicios/:id` — actualizar servicio
+- `PATCH /servicios/:id/habilitar` — habilitar servicio
+- `PATCH /servicios/:id/inhabilitar` — inhabilitar servicio
+- `DELETE /servicios/:id` — eliminar servicio
+- `GET /servicios/:id/especialistas` — especialistas que ofrecen un servicio
+
+**Reglas de servicios que deben bloquearse:**
+- Crear válido → `201` y crea el servicio en `activo`
+- Crear con nombre duplicado → `400` con `Ya existe un servicio con este nombre.`
+- Crear con nombre corto → `400` con `El nombre debe tener mínimo tres carateres.`
+- Crear con descripción corta → `400` con `La descripción debe tener al menos 5 caracteres.`
+- Crear con costo en 0 → `400` con `El costo debe ser mayor a cero.`
+- Crear con costo > 99999999.99 → `400` con `El costo no puede ser mayor a 99999999.99.`
+- Crear con duración en 0 → `400` con `La duración debe ser mayor a cero.`
+- Crear con duración decimal → `400` con `La duración debe ser un número entero.`
+- Actualizar válido → `200` con el servicio actualizado
+- Actualizar con nombre duplicado → `400` con `Ya existe un servicio con este nombre.`
+- Actualizar con id no entero → `400` con `El identificador del servicio debe ser un número entero.`
+- Inhabilitar válido → `200` y queda en `inactivo`
+- Inhabilitar ya inhabilitado → `400` con `El servicio ya está inactivo.`
+- Habilitar válido → `200` y queda en `activo`
+- Habilitar ya habilitado → `400` con `El servicio ya está activo.`
+- Eliminar con citas → `400` con `No se puede eliminar el servicio porque tiene citas asociadas.`
+- Eliminar sin citas → `200` y elimina el servicio
+- Listar como admin → `200` con todos, `activo` e `inactivo`
+- Listar como cliente → `200` solo con `activo`
+
 ### Pruebas del frontend con Expo Go
 
 1. **Registro:** registrar usuario nuevo → debe salir `ModalExito` y llevar a iniciar sesión.
@@ -184,6 +214,12 @@ Base: `http://localhost:3000/api`
 10. **Citas — Pestañas y estado:** `Próximas` solo muestra `pendiente`, `Historial` solo `cancelada` y `completada`. Botones `Reagendar` y `Cancelar` solo salen en `pendiente`. Iconos de estado: `pendiente` reloj con `?` rosado `#D922AC`, `cancelada` círculo con `X` rojo `#D63031`, `completada` círculo con check verde oscuro `#00875A`.
 11. **Citas — Vacíos y scroll:** si no hay citas, debe salir `¡No tienes citas agendadas!` o `¡Historial vacío!` sin caerse. La barra de scroll solo se ve cuando las citas superan el alto de la pantalla y se mueve suave.
 12. **Citas — Modales:** `ModalEliminarCita` y `ModalExito` van al final del árbol en `PantallaCitas`, después del botón flotante, para que el `MaskedView` no interfiera y el `fade` sí se note al abrir y al cerrar.
+13. **Servicios — Crear:** entrar a `crear-servicio`, llenar nombre, descripción, costo y duración válidos → debe salir `ModalExito` y salir en la lista.
+14. **Servicios — Actualizar:** en `Detalles del servicio`, dar `Editar`, cambiar datos → debe salir `ModalExito` y cambiar en la lista.
+15. **Servicios — Habilitar / Inhabilitar:** en `Detalles del servicio`, dar `Inhabilitar` / `Habilitar` → debe salir `ModalModificar` con la acción, confirmar → debe salir `ModalExito` y cambiar el `estado` y el color a gris `#A8A8A8` si queda `inactivo`.
+16. **Servicios — Eliminar:** en `Detalles del servicio`, dar `Eliminar` → debe salir `ModalModificar` con `Si tiene citas asociadas no se podrá eliminar.` Confirmar sin citas → debe salir `ModalExito` con `Servicio eliminado correctamente.` Confirmar con citas → debe salir `ModalMensaje` con triángulo `alert-outline` y `No se puede eliminar el servicio porque tiene citas asociadas.`
+17. **Servicios — Pestañas y texto:** `Todos` muestra todos, `Activos` solo `activo`, `Inactivos` solo `inactivo`. El nombre del servicio va en su propia cajita `contenedorTexto` con `flex: 1` y `minWidth: 0`, y el texto con `flexWrap: 'wrap'` y `width: '100%'` para que no se salga del modal y crezca para abajo.
+18. **Servicios — Modales reutilizables:** `ModalEstados` se reutilizó como `ModalMensaje`, con `titulo`, `mensaje` y triángulo, para errores como el de eliminar con citas, en vez del `Alert` nativo.
 
 ## Metodología de versionamiento
 
@@ -209,4 +245,9 @@ Base: `http://localhost:3000/api`
     - Validaciones en backend: servicio y especialista activos, especialista ofrece el servicio, trabaja ese día, hora dentro del horario, fecha no pasada, no ocupada, no editar ni cancelar cita cancelada o completada.
     - Refactor: `validarServicio` y `validarCita` sin repetir código, `404` de servicio y especialista leídos en controller.
     - Frontend: crear, reagendar y cancelar con modales, pestañas, iconos de estado, botones solo en pendiente, vacíos y scroll.
+    - Pruebas de regresión en Postman y Expo Go aprobadas.
+- **Hito 4:** implementación del módulo de servicios.
+    - Crear, actualizar, habilitar, inhabilitar, eliminar, listar y especialistas por servicio.
+    - Validaciones en backend: nombre 3-50 único, descripción 5-500, costo > 0 y <= 99999999.99, duración entero > 0, id entero, no eliminar con citas, no habilitar ya habilitado ni inhabilitar ya inhabilitado.
+    - Frontend: crear, actualizar, administrar con `ModalModificar` y `ModalExito`, `ModalMensaje` reutilizado de `ModalEstados`, pestañas Todos / Activos / Inactivos.
     - Pruebas de regresión en Postman y Expo Go aprobadas.

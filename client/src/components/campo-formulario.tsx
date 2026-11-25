@@ -13,6 +13,7 @@ type CampoFormularioProps = {
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   icono?: keyof typeof MaterialCommunityIcons.glyphMap;
   error?: string;
+  sufijo?: string
   deshabilitado?: boolean
 };
 
@@ -26,6 +27,7 @@ const CampoFormulario = ({
   autoCapitalize = 'sentences',
   icono,
   error,
+  sufijo,
   deshabilitado = false
 }: CampoFormularioProps) => {
   return (
@@ -67,6 +69,12 @@ const CampoFormulario = ({
           autoCapitalize={autoCapitalize}
           editable={!deshabilitado}
         />
+
+        {sufijo && (
+          <View style={campoFormularioStyles.contenedorSufijo}>
+          <Text style={campoFormularioStyles.textoSufijo}>{sufijo}</Text>
+        </View>
+        )}
       </View>
 
       {error ? (

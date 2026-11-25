@@ -6,7 +6,9 @@ import { campoFormularioStyles } from '@/styles/campo-formulario-styles';
 
 type SelectorDesplegableProps = {
   etiqueta: string;
-  icono: 'creation' | 'account-outline' | 'calendar-outline' | 'clock-outline';
+  icono: React.ComponentProps<
+    typeof MaterialCommunityIcons
+  >['name'];
   valor: string;
   deshabilitado?: boolean;
   error?: string;

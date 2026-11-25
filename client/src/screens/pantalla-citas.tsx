@@ -3,7 +3,6 @@ import {
   Animated,
   Image,
   ScrollView,
-  TouchableOpacity,
   Text,
   View
 } from 'react-native';
@@ -35,10 +34,13 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import BarraNavegacion from '@/components/barra-navegacion';
 import Encabezado from '@/components/encabezado';
 import BotonTarjeta from '@/components/boton-tarjeta';
+import BotonFlotante from '@/components/boton-flotante';
 import ModalExito from '@/components/modal-exito';
-import ModalEliminarCita from '@/components/modal-eliminar-cita';
+import ModalModificar from '@/components/modal-modificar';
 import PestaniaFiltro from '@/components/pestania-filtro';
 import PantallaCarga from '@/components/pantalla-carga';
+import BarraScroll from '@/components/barra-scroll';
+
 import { citasStyles } from '@/styles/citas-styles';
 
 type Cita = {
@@ -81,7 +83,6 @@ const PantallaCitas = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [citaSeleccionada, setCitaSeleccionada] = useState<number | null>(null);
   const [mostrarExito, setMostrarExito] = useState(false);
-  const [altoIndicador, setPosicionScroll] = useState(0);
   const [altoContenido, setAltoContenido] = useState(0);
   const [altoVentana, setAltoVentana] = useState(0);
   const [pestania, setPestania] = useState<'proximas' | 'historial'>('proximas');
@@ -352,29 +353,11 @@ const PantallaCitas = () => {
           )}
 
           {citasFiltradas.length > 0 && altoContenido > altoVentana && (
-            <View
-              style={citasStyles.indicadorScroll}
-              onLayout={(evento) =>
-                setPosicionScroll(evento.nativeEvent.layout.height)
-              }
-            >
-              <Animated.View
-                style={[
-                  citasStyles.barraScroll,
-                  {
-                    transform: [
-                      {
-                        translateY: posicionScroll.interpolate({
-                          inputRange: [0, Math.max(0, altoContenido - altoVentana)],
-                          outputRange: [0, Math.max(0, altoIndicador - 100)],
-                          extrapolate: 'clamp'
-                        })
-                      }
-                    ]
-                  }
-                ]}
-              />
-          </View>
+            <BarraScroll
+              posicionScroll={posicionScroll}
+              altoContenido={altoContenido}
+              altoVentana={altoVentana}
+            />
           )}
 
           <View style={citasStyles.navegacion}
@@ -386,29 +369,20 @@ const PantallaCitas = () => {
           </View>
 
           {altoBarra > 0 && (
-            <TouchableOpacity
-              style={[
-                citasStyles.botonFlotante,
-                {
-                  bottom: altoBarra + insets.bottom + 40
-                }
-              ]}
-              onLayout={(evento) => {
-                console.log("Flotante", evento.nativeEvent.layout.height)
-              }}
+            <BotonFlotante
+              texto='Nueva cita'
               onPress={() => router.push('/crear-cita')}
-            >
-              <IconCalendarPlus
-                size={28}
-                color="#FFFFFF"
-                strokeWidth={2}
-              />
-              <Text style={citasStyles.textoBotonFlotante}>Nueva cita</Text>
-            </TouchableOpacity>
+              icono={IconCalendarPlus}
+              bottom={altoBarra + insets.bottom + 40}
+            />
           )}
 
-          <ModalEliminarCita
+          <ModalModificar
             visible={modalVisible}
+            accion='cancelar'
+            adjetivo='esta'
+            nombre='cita'
+            advertencia={`Si confirmas, no podrás reagendarla.`}
             alCerrar={() => setModalVisible(false)}
             alConfirmar={() => {
               setModalVisible(false);

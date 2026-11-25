@@ -23,34 +23,40 @@ const BarraNavegacion = () => {
         onPress={() => navegar('/inicio')}
       >
         <MaterialCommunityIcons
-          name='home'
+          name={rutaActual === '/inicio' ? 'home' : 'home-outline'}
           size={26}
-          color={rutaActual === '/inicio' ? '#FFFFFF' : '#E42BB8'}
+          color={rutaActual === '/inicio' ? '#C81FA3' : '#E42BB8'}
         />
 
         <Text
           style={[
             barraNavegacionStyles.texto,
             {
-              color: rutaActual === '/inicio'
-                ? '#FFFFFF'
-                : '#E42BB8'
+              color: rutaActual === '/inicio' ? '#C81FA3' : '#E42BB8'
             }
           ]}>Inicio
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={barraNavegacionStyles.entrada}>
+      <TouchableOpacity
+        style={[
+          barraNavegacionStyles.entrada,
+          rutaActual === '/servicios' && barraNavegacionStyles.entradaActiva
+        ]}
+        onPress={() => navegar('/servicios')}
+      >
         <MaterialCommunityIcons
-          name='creation'
+          name={rutaActual === '/servicios' ? 'creation' : 'creation-outline'}
           size={26}
-          color='#E42BB8'
+          color={rutaActual === '/servicios' ? '#C81FA3' : '#E42BB8'}
         />
 
         <Text
           style={[
             barraNavegacionStyles.texto,
-            { color: '#E42BB8' }
+            {
+              color: rutaActual === '/servicios' ? '#C81FA3' : '#E42BB8'
+            }
           ]}>Servicios
         </Text>
       </TouchableOpacity>
@@ -63,18 +69,16 @@ const BarraNavegacion = () => {
         onPress={() => navegar('/citas')}
       >
         <MaterialCommunityIcons
-          name='calendar-month'
+          name={rutaActual === '/citas' ? 'calendar-month' : 'calendar-month-outline'}
           size={26}
-          color={rutaActual === '/citas' ? '#FFFFFF' : '#E42BB8'}
+          color={rutaActual === '/citas' ? '#C81FA3' : '#E42BB8'}
         />
 
         <Text
           style={[
             barraNavegacionStyles.texto,
             {
-              color: rutaActual === '/citas'
-                ? '#FFFFFF'
-                : '#E42BB8'
+              color: rutaActual === '/citas' ? '#C81FA3' : '#E42BB8'
             }
           ]}>Citas
         </Text>
@@ -88,18 +92,16 @@ const BarraNavegacion = () => {
         onPress={() => navegar('/perfil')}
       >
         <MaterialCommunityIcons
-          name='account'
+          name={rutaActual === '/perfil' ? 'account' : 'account-outline'}
           size={26}
-          color={rutaActual === '/perfil' ? '#FFFFFF' : '#E42BB8'}
+          color={rutaActual === '/perfil' ? '#C81FA3' : '#E42BB8'}
         />
 
         <Text
           style={[
             barraNavegacionStyles.texto,
             {
-              color: rutaActual === '/perfil'
-                ? '#FFFFFF'
-                : '#E42BB8'
+              color: rutaActual === '/perfil' ? '#C81FA3' : '#E42BB8'
             }
           ]}>Perfil
         </Text>

@@ -49,3 +49,14 @@ export const verificarSesion = async (respuesta: Response) => {
 
   return true;
 };
+
+// Obtiene el rol del usario de AsyncStorage
+export const obtenerRol = async () => {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) return null;
+
+  const payload = token.split('.')[1];
+  const datos = JSON.parse(atob(payload));
+  return datos.rol;
+};

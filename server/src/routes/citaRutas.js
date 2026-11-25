@@ -17,11 +17,6 @@ const router = express.Router();
 // Define las rutas de citas y protege cada operación según corresponda.
 router.get("/", verificarAutenticacion, citaControlador.listarCitas);
 router.get("/proxima", verificarAutenticacion, citaControlador.obtenerProximaCita);
-router.get(
-    "/servicios/:idServicio/especialistas",
-    verificarAutenticacion,
-    citaControlador.obtenerEspecialistasPorServicio
-);
 
 router.get(
     "/especialistas/:idEspecialista/horarios",
@@ -69,7 +64,5 @@ router.delete(
     verificarPropietarioCita,
     citaControlador.eliminarCita
 );
-
-router.get('/servicios', verificarAutenticacion, citaControlador.listarServicios);
 
 export default router;
