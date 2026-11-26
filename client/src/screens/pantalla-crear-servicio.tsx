@@ -1,7 +1,5 @@
 import {
   View,
-  Text,
-  TextInput,
   KeyboardAvoidingView,
   ScrollView
 } from 'react-native';
@@ -29,8 +27,6 @@ import ModalExito from '@/components/modal-exito';
 import CajaDescripicion from '@/components/caja-descripcion';
 
 import { registroStyles } from '@/styles/registro-styles';
-import { serviciosStyles } from '@/styles/servicios-styles';
-import { campoFormularioStyles } from '@/styles/campo-formulario-styles';
 import { crearServicio } from '@/services/servicio-servicio';
 import { obtenerRol } from '@/services/sesion-servicio';
 import { router } from 'expo-router';

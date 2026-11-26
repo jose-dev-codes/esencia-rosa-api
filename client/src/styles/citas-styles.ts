@@ -18,7 +18,9 @@ export const citasStyles = StyleSheet.create({
     marginBottom: 8
   },
   contenedorCita: {
-    gap: 5
+    gap: 5,
+    flex: 1,
+    minWidth: 0
   },
   cita: {
     width: '100%',
@@ -34,7 +36,9 @@ export const citasStyles = StyleSheet.create({
   encabezadoCita: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10
+    gap: 10,
+    flex: 1,
+    minWidth: 0
   },
   perfilCita: {
     justifyContent: 'center',
@@ -51,11 +55,13 @@ export const citasStyles = StyleSheet.create({
     fontFamily: 'Poppins_600SemiBold',
     color: '#E42BB8',
     lineHeight: 21,
+    flexWrap: 'wrap',
     marginBottom: 4
   },
   especialistaCita: {
     fontSize: 14,
     fontFamily: 'Poppins_500Medium',
+    flexWrap: 'wrap',
     lineHeight: 16,
     color: '#9F167C'
   },
@@ -196,6 +202,11 @@ export const citasStyles = StyleSheet.create({
     fontFamily: 'Poppins_500Medium',
     color: '#FFFFFF',
     lineHeight: 20,
+  },
+  cajaAdaptable: {
+    flex: 1,
+    flexShrink: 1,
+    minWidth: 0
   },
   navegacion: {
     marginVertical: 5

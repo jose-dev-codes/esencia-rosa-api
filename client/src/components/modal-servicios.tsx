@@ -8,6 +8,7 @@ import {
 import { modalBaseStyles } from '@/styles/modal-base-styles';
 import { modalServiciosStyles } from '@/styles/modal-servicios-styles';
 import { formatearPrecio } from '@/utils/formulario-utilidades';
+import { citasStyles } from '@/styles/citas-styles';
 
 import Boton from './boton';
 
@@ -54,9 +55,11 @@ const ModalServicios = ({
                 }}
               >
                 <View style={modalServiciosStyles.filaServicio}>
-                  <Text style={modalBaseStyles.textoOpcion}>
-                    {servicio.nombre}
-                  </Text>
+                  <View style={citasStyles.cajaAdaptable}>
+                    <Text style={modalBaseStyles.textoOpcion}>
+                      {servicio.nombre}
+                    </Text>
+                  </View>
 
                   <Text style={modalBaseStyles.textoOpcion}>
                     {formatearPrecio(servicio.costo)}

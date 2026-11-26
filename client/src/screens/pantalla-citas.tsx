@@ -1,7 +1,5 @@
 import {
-  Alert,
   Animated,
-  Image,
   ScrollView,
   Text,
   View
@@ -15,7 +13,7 @@ import {
 
 import { cancelarCita, obtenerMisCitas } from '@/services/cita-servicio';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useFocusEffect, router, Color } from 'expo-router';
+import { useFocusEffect, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -35,11 +33,13 @@ import BarraNavegacion from '@/components/barra-navegacion';
 import Encabezado from '@/components/encabezado';
 import BotonTarjeta from '@/components/boton-tarjeta';
 import BotonFlotante from '@/components/boton-flotante';
+import EstadoVacio from '@/components/estado-vacio';
 import ModalExito from '@/components/modal-exito';
 import ModalModificar from '@/components/modal-modificar';
 import PestaniaFiltro from '@/components/pestania-filtro';
 import PantallaCarga from '@/components/pantalla-carga';
 import BarraScroll from '@/components/barra-scroll';
+import ModalMensaje from '@/components/modal-mensaje';
 
 import { citasStyles } from '@/styles/citas-styles';
 
@@ -88,6 +88,8 @@ const PantallaCitas = () => {
   const [pestania, setPestania] = useState<'proximas' | 'historial'>('proximas');
   const [altoBarra, setAltoBarra] = useState(0);
   const [cargando, setCargando] = useState(true);
+  const [mensajeError, setMensajeError] = useState('');
+  const [modalMensajeVisible, setModalMensajeVisible] = useState(false);
 
   const posicionScroll = useRef(new Animated.Value(0)).current;
 
@@ -119,10 +121,8 @@ const PantallaCitas = () => {
       return;
     }
 
-    Alert.alert(
-      'Error',
-      resultado?.datos.error ?? 'No se pudo cancelar la cita.'
-    );
+    setMensajeError(resultado?.datos.error ?? 'No se pudo cancelar la cita.');
+    setModalMensajeVisible(true);
   };
 
   const mostrarConfirmacionCancelacion = (id: number) => {
@@ -185,7 +185,11 @@ const PantallaCitas = () => {
                 />
               }
             >
-              <Animated.View style={{ opacity: opacidad, flex: 1 }}>
+              <Animated.View style={{
+                opacity: opacidad,
+                flex: 1,
+                position: 'relative'
+              }}>
                 <ScrollView
                   style={{
                     paddingHorizontal: 15,
@@ -221,13 +225,18 @@ const PantallaCitas = () => {
                             />
                           </View>
 
-                          <View>
-                            <Text style={citasStyles.nombreServicio}>
-                              {cita.servicio}
-                            </Text>
-                            <Text style={citasStyles.especialistaCita}>
-                              con {cita.especialista_nombres} {cita.especialista_apellidos}
-                            </Text>
+                          <View style={citasStyles.cajaAdaptable}>
+                            <View style={citasStyles.cajaAdaptable}>
+                              <Text style={citasStyles.nombreServicio}>
+                                {cita.servicio}
+                              </Text>
+                            </View>
+
+                            <View style={citasStyles.cajaAdaptable}>
+                              <Text style={citasStyles.especialistaCita}>
+                                con {cita.especialista_nombres} {cita.especialista_apellidos}
+                              </Text>
+                            </View>
                           </View>
                         </View>
 
@@ -328,35 +337,27 @@ const PantallaCitas = () => {
                     </View>
                   ))}
                 </ScrollView>
+
+                {citasFiltradas.length > 0 &&
+                  altoContenido > altoVentana + 25 && (
+                    <BarraScroll
+                      posicionScroll={posicionScroll}
+                      altoContenido={altoContenido}
+                      altoVentana={altoVentana}
+                    />
+                )}
               </Animated.View>
             </MaskedView>
           )}
 
           {citasFiltradas.length === 0 && (
-            <Animated.View style={{ opacity: opacidad, flex: 1 }}>
-              <View
-                style={citasStyles.citasVacia}>
-                <Image
-                  source={require('@/assets/images/avatar-sin-citas.png')}
-                  style={citasStyles.imagenVacia}
-                />
-                <Text
-                    style={citasStyles.mensajeVacio}
-                  >
-                    {pestania === 'proximas'
-                      ? '¡No tienes citas agendadas!'
-                      : '¡Historial vacío!'
-                    }
-                  </Text>
-              </View>
-            </Animated.View>
-          )}
-
-          {citasFiltradas.length > 0 && altoContenido > altoVentana && (
-            <BarraScroll
-              posicionScroll={posicionScroll}
-              altoContenido={altoContenido}
-              altoVentana={altoVentana}
+            <EstadoVacio
+              opacidad={opacidad}
+              imagen={require('@/assets/images/avatar-sin-citas.png')}
+              texto={pestania === 'proximas'
+                ? '¡No tienes citas agendadas!'
+                : '¡Historial vacío!'
+              }
             />
           )}
 
@@ -398,6 +399,16 @@ const PantallaCitas = () => {
             onClose={() => {
               setMostrarExito(false);
               cargarCitas();
+            }}
+          />
+
+          <ModalMensaje
+            visible={modalMensajeVisible}
+            titulo='No se pudo cancelar'
+            mensaje={mensajeError}
+            alCerrar={() => {
+              setModalMensajeVisible(false);
+              setMensajeError('');
             }}
           />
         </>

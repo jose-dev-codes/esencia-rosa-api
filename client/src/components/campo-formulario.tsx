@@ -71,7 +71,12 @@ const CampoFormulario = ({
         />
 
         {sufijo && (
-          <View style={campoFormularioStyles.contenedorSufijo}>
+          <View
+            style={[
+              campoFormularioStyles.contenedorSufijo,
+              { borderColor: error ? '#D63031' : '#D922AC' }
+            ]}
+          >
           <Text style={campoFormularioStyles.textoSufijo}>{sufijo}</Text>
         </View>
         )}

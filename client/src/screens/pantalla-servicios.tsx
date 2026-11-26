@@ -24,6 +24,7 @@ import BotonTarjeta from '@/components/boton-tarjeta';
 import BarraNavegacion from '@/components/barra-navegacion';
 import BotonFlotante from '@/components/boton-flotante';
 import BarraScroll from '@/components/barra-scroll';
+import EstadoVacio from '@/components/estado-vacio';
 import ModalModificar from '@/components/modal-modificar';
 import ModalMensaje from '@/components/modal-mensaje';
 import ModalExito from '@/components/modal-exito';
@@ -199,181 +200,202 @@ const PantallaServicios = () => {
             </View>
           )}
 
-          <MaskedView
-            style={{ flex: 1 }}
-            maskElement={
-              <LinearGradient
-                colors={[
-                  'transparent',
-                  'black',
-                  'black',
-                  'transparent'
-                ]}
-                locations={[0, 0.015, 0.985, 1]}
-                style={{ flex: 1 }}
-              />
-            }
-          >
-            <Animated.View style={{
-              opacity: opacidad,
-              flex: 1,
-              position: 'relative'
-            }}>
-              <ScrollView
-                style={{
-                  paddingHorizontal: 15,
-                  alignSelf: 'stretch',
-                  backgroundColor: '#FCE3EE',
-                  paddingTop: 8
-                }}
-                showsVerticalScrollIndicator={false}
-                onScroll={(evento) =>
-                  posicionScroll.setValue(evento.nativeEvent.contentOffset.y)
-                }
-                scrollEventThrottle={16}
-                onContentSizeChange={(ancho, alto) => setAltoContenido(alto)}
-                onLayout={(evento) =>
-                  setAltoVentana(evento.nativeEvent.layout.height)
-                }
-                contentContainerStyle={citasStyles.contenedor}
-              >
-                {serviciosFiltrados.map((servicio) => (
-                  <View
-                    key={servicio.id_servicio}
-                    style={[
-                      citasStyles.cita,
-                      servicio.estado === 'inactivo' &&
-                      serviciosStyles.servicioInactivo
-                    ]}
-                  >
-                    <View style={citasStyles.contenedorCita}>
-                      <View style={citasStyles.encabezadoCita}>
-                        {(() => {
-                          const Icono = obtenerIconoPorServicio(servicio.nombre);
+          {serviciosFiltrados.length > 0 && (
+            <MaskedView
+              style={{ flex: 1 }}
+              maskElement={
+                <LinearGradient
+                  colors={[
+                    'transparent',
+                    'black',
+                    'black',
+                    'transparent'
+                  ]}
+                  locations={[0, 0.015, 0.985, 1]}
+                  style={{ flex: 1 }}
+                />
+              }
+            >
+              <Animated.View style={{
+                opacity: opacidad,
+                flex: 1,
+                position: 'relative'
+              }}>
+                <ScrollView
+                  style={{
+                    paddingHorizontal: 15,
+                    alignSelf: 'stretch',
+                    backgroundColor: '#FCE3EE',
+                    paddingTop: 8
+                  }}
+                  showsVerticalScrollIndicator={false}
+                  onScroll={(evento) =>
+                    posicionScroll.setValue(evento.nativeEvent.contentOffset.y)
+                  }
+                  scrollEventThrottle={16}
+                  onContentSizeChange={(ancho, alto) => setAltoContenido(alto)}
+                  onLayout={(evento) =>
+                    setAltoVentana(evento.nativeEvent.layout.height)
+                  }
+                  contentContainerStyle={citasStyles.contenedor}
+                >
+                  {serviciosFiltrados.map((servicio) => (
+                    <View
+                      key={servicio.id_servicio}
+                      style={[
+                        citasStyles.cita,
+                        servicio.estado === 'inactivo' &&
+                        serviciosStyles.servicioInactivo
+                      ]}
+                    >
+                      <View style={citasStyles.contenedorCita}>
+                        <View style={citasStyles.encabezadoCita}>
+                          {(() => {
+                            const Icono = obtenerIconoPorServicio(servicio.nombre);
 
-                          return (
-                            <Icono
-                              size={23}
-                              color={servicio.estado === 'inactivo'
-                                ? '#A8A8A8'
-                                : '#E42BB8'
-                              }
-                              strokeWidth={2.2}
-                            />
-                          );
-                        })()}
+                            return (
+                              <Icono
+                                size={23}
+                                color={servicio.estado === 'inactivo'
+                                  ? '#A8A8A8'
+                                  : '#E42BB8'
+                                }
+                                strokeWidth={2.2}
+                              />
+                            );
+                          })()}
 
-                        <View>
-                          <Text style={[
-                            citasStyles.nombreServicio,
-                            servicio.estado === 'inactivo' &&
-                            serviciosStyles.textoInactivo
-                          ]}>
-                            {servicio.nombre}
-                          </Text>
+                          <View>
+                            <Text style={[
+                              citasStyles.nombreServicio,
+                              servicio.estado === 'inactivo' &&
+                              serviciosStyles.textoInactivo
+                            ]}>
+                              {servicio.nombre}
+                            </Text>
+                          </View>
                         </View>
-                      </View>
 
-                      <View
-                        style={[
-                          citasStyles.separador,
-                          servicio.estado === 'inactivo' &&
-                          { backgroundColor: '#A8A8A8' }
-                        ]}
-                      />
+                        <View
+                          style={[
+                            citasStyles.separador,
+                            servicio.estado === 'inactivo' &&
+                            { backgroundColor: '#A8A8A8' }
+                          ]}
+                        />
 
-                      <View style={serviciosStyles.contenedorServicio}>
-                        <View style={serviciosStyles.contenedorInfo}>
-                          <View style={citasStyles.filaConIcono}>
-                            <IconCoins
-                              size={23}
-                              color={servicio.estado === 'inactivo'
-                                ? '#A8A8A8'
-                                : '#E42BB8'
-                              }
-                              strokeWidth={1.5}
-                            />
-                            <Text style={[
-                              citasStyles.valorConIcono,
-                              servicio.estado === 'inactivo' &&
-                              serviciosStyles.textoInactivo
-                            ]}>
-                              {formatearPrecio(servicio.costo)}
-                            </Text>
-                          </View>
-
-                          <View style={citasStyles.filaConIcono}>
-                            <IconClockHour8
-                              size={23}
-                              color={servicio.estado === 'inactivo'
-                                ? '#A8A8A8'
-                                : '#E42BB8'
-                              }
-                              strokeWidth={1.5}
-                            />
-                            <Text style={[
-                              citasStyles.valorConIcono,
-                              servicio.estado === 'inactivo' &&
-                              serviciosStyles.textoInactivo
-                            ]}>
-                              {servicio.duracion_minutos} min.
-                            </Text>
-                          </View>
-
-                          {rol === 'admin' && (
-                            <View
-                              style={[
-                                serviciosStyles.etiquetaEstado,
-                                servicio.estado === 'inactivo' &&
-                                { backgroundColor: '#A8A8A8' }
-                              ]}
-                            >
+                        <View style={serviciosStyles.contenedorServicio}>
+                          <View style={serviciosStyles.contenedorInfo}>
+                            <View style={citasStyles.filaConIcono}>
+                              <IconCoins
+                                size={23}
+                                color={servicio.estado === 'inactivo'
+                                  ? '#A8A8A8'
+                                  : '#E42BB8'
+                                }
+                                strokeWidth={1.5}
+                              />
                               <Text style={[
-                                serviciosStyles.textoEstado,
+                                citasStyles.valorConIcono,
                                 servicio.estado === 'inactivo' &&
-                                {color: '#EDEDED'}
+                                serviciosStyles.textoInactivo
                               ]}>
-                                {servicio.estado}
+                                {formatearPrecio(servicio.costo)}
                               </Text>
                             </View>
-                          )}
-                        </View>
 
-                        <View style={{ flex: 1, justifyContent: 'center' }}>
-                          <BotonTarjeta
-                            texto={rol === 'admin'
-                              ? 'Administrar'
-                              : 'Ver / Agendar'
-                            }
-                            borderColor={
-                              servicio.estado === 'inactivo' ?
-                                'rgba(228, 43, 184, 0.50)'
-                                : undefined
-                            }
-                            onPress={() => {
-                              setServicioSeleccionado(servicio);
-                              setModalInfoVisible(true);
-                            }}
-                          />
-                        </View>
+                            <View style={citasStyles.filaConIcono}>
+                              <IconClockHour8
+                                size={23}
+                                color={servicio.estado === 'inactivo'
+                                  ? '#A8A8A8'
+                                  : '#E42BB8'
+                                }
+                                strokeWidth={1.5}
+                              />
+                              <Text style={[
+                                citasStyles.valorConIcono,
+                                servicio.estado === 'inactivo' &&
+                                serviciosStyles.textoInactivo
+                              ]}>
+                                {servicio.duracion_minutos} min.
+                              </Text>
+                            </View>
 
+                            {rol === 'admin' && (
+                              <View
+                                style={[
+                                  serviciosStyles.etiquetaEstado,
+                                  servicio.estado === 'inactivo' &&
+                                  { backgroundColor: '#A8A8A8' }
+                                ]}
+                              >
+                                <Text style={[
+                                  serviciosStyles.textoEstado,
+                                  servicio.estado === 'inactivo' &&
+                                  {color: '#EDEDED'}
+                                ]}>
+                                  {servicio.estado}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+
+                          <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <BotonTarjeta
+                              texto={rol === 'admin'
+                                ? 'Administrar'
+                                : 'Ver / Agendar'
+                              }
+                              borderColor={
+                                servicio.estado === 'inactivo' ?
+                                  'rgba(228, 43, 184, 0.50)'
+                                  : undefined
+                              }
+                              onPress={() => {
+                                setServicioSeleccionado(servicio);
+                                setModalInfoVisible(true);
+                              }}
+                            />
+                          </View>
+
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ))}
-              </ScrollView>
+                  ))}
+                </ScrollView>
 
-              {serviciosFiltrados.length > 0 &&
-                altoContenido > altoVentana && (
-                  <BarraScroll
-                    posicionScroll={posicionScroll}
-                    altoContenido={altoContenido}
-                    altoVentana={altoVentana}
-                  />
-                )
+                {serviciosFiltrados.length > 0 &&
+                  altoContenido > altoVentana + 25 && (
+                    <BarraScroll
+                      posicionScroll={posicionScroll}
+                      altoContenido={altoContenido}
+                      altoVentana={altoVentana}
+                    />
+                  )
+                }
+              </Animated.View>
+            </MaskedView>
+          )}
+
+          {serviciosFiltrados.length === 0 && (
+            <EstadoVacio
+              opacidad={opacidad}
+              icono={
+                <IconSparkles
+                  size={100}
+                  color='#D922AC'
+                  strokeWidth={1.5}
+                />
               }
-            </Animated.View>
-          </MaskedView>
+              texto={pestania === 'todos'
+                ? '¡No hay servicios disponibles!'
+                : pestania === 'activos'
+                  ? '¡No tienes servicios activos!'
+                  : '¡No tienes servicios inactivos!'
+              }
+            />
+          )}
 
           <Modal
             visible={servicioSeleccionado !== null && modalInfoVisible}

@@ -27,7 +27,6 @@ export const campoFormularioStyles = StyleSheet.create({
   },
   contenedorSufijo: {
     borderLeftWidth: 1,
-    borderColor: '#D922AC',
     paddingLeft: 8
   },
   textoSufijo: {

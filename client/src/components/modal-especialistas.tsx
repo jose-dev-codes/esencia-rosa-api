@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { modalBaseStyles } from '@/styles/modal-base-styles';
+import { citasStyles } from '@/styles/citas-styles';
 import { modalEspecialistasStyles } from '@/styles/modal-especialistas-styles';
 
 import Boton from './boton';
@@ -62,9 +63,11 @@ const ModalEspecialistas = ({
                     />
                   </View>
 
-                  <Text style={modalBaseStyles.textoOpcion}>
-                    {especialista.nombres} {especialista.apellidos}
-                  </Text>
+                  <View style= {citasStyles.cajaAdaptable}>
+                    <Text style={modalBaseStyles.textoOpcion}>
+                      {especialista.nombres} {especialista.apellidos}
+                    </Text>
+                  </View>
                 </View>
               </TouchableOpacity>
             ))}
